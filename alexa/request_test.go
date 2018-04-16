@@ -14,7 +14,7 @@ func TestLaunchRequest(t *testing.T) {
 	var r RequestEnvelope
 	err := json.Unmarshal(launchRequest, &r)
 	if err != nil {
-		t.Fatal("Error occured", err)
+		t.Fatal("Error occurred", err)
 		t.FailNow()
 	}
 	skill.OnLaunch = func(requestEnvelope *RequestEnvelope, request *LaunchRequest, response *OutgoingResponse) {

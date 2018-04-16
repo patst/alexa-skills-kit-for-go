@@ -73,6 +73,7 @@ type GameEngineInputHandlerEventRequest struct {
 	Events               []GameEngineInputEvent `json:"events"`
 }
 
+// NewGameEngineStartInputDirective creates a new directive with StartInputerHandler Type.
 func NewGameEngineStartInputDirective() *GameEngineStartInputDirective {
 	return &GameEngineStartInputDirective{
 		Type: "GameEngine.StartInputHandler",
