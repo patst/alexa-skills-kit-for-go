@@ -1,7 +1,5 @@
 package alexa
 
-import ()
-
 type GameEngineStartInputDirective struct {
 	Type                 string                                 `json:"type,omitempty"`
 	Timeout              int                                    `json:"timeout"`

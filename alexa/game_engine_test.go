@@ -56,7 +56,7 @@ func TestRegisterForEvents(t *testing.T) {
 				Fuzzy:  false,
 				Anchor: "end",
 				Pattern: []GameEnginePattern{
-					GameEnginePattern{
+					{
 						Action: "down",
 					},
 				},
@@ -66,24 +66,24 @@ func TestRegisterForEvents(t *testing.T) {
 				Fuzzy:  false,
 				Anchor: "end",
 				Pattern: []GameEnginePattern{
-					GameEnginePattern{
+					{
 						Action: "up",
 					},
 				},
 			},
 		}
 		directive.Events = map[string]GameEngineRegistrationEvent{
-			"button_down_event": GameEngineRegistrationEvent{
+			"button_down_event": {
 				Meets:                 []string{"button_down_recognizer"},
 				Reports:               "matches",
 				ShouldEndInputHandler: false,
 			},
-			"button_up_event": GameEngineRegistrationEvent{
+			"button_up_event": {
 				Meets:                 []string{"button_up_recognizer"},
 				Reports:               "matches",
 				ShouldEndInputHandler: false,
 			},
-			"timeout": GameEngineRegistrationEvent{
+			"timeout": {
 				Meets:                 []string{"timed out"},
 				Reports:               "history",
 				ShouldEndInputHandler: true,

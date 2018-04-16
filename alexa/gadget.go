@@ -1,7 +1,5 @@
 package alexa
 
-import ()
-
 type GadgetControllerSetLightDirective struct {
 	Type          string           `json:"type,omitempty"`
 	Version       int              `json:"version"`

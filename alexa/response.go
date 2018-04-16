@@ -1,7 +1,5 @@
 package alexa
 
-import ()
-
 // OutgoingResponse is the complete object returned for a alexa POST request.
 type OutgoingResponse struct {
 	Version           string                 `json:"version"`
