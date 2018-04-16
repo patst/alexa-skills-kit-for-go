@@ -13,7 +13,7 @@ func TestGameEngineInputEvent(t *testing.T) {
 	}
 	skillHandler := skill.GetSkillHandler()
 
-	skill.OnGameEngineEvent = func(requestEnvelope *RequestEnvelope, request *GameEngineInputHandlerEventRequest, response *OutgoingResponse) {
+	skill.OnGameEngineEvent = func(request *GameEngineInputHandlerEventRequest, response *OutgoingResponse) {
 		assertEqual(t, "GameEngine.InputHandlerEvent", request.Type, "")
 		assertEqual(t, "amzn1.echo-api.request.463eaf71-0206-412e-b7dd-164936862994", request.OriginatingRequestID, "")
 		assertEqual(t, "button_down_event", request.Events[0].Name, "")
@@ -43,7 +43,7 @@ func TestRegisterForEvents(t *testing.T) {
 	}
 	skillHandler := skill.GetSkillHandler()
 
-	skill.OnLaunch = func(requestEnvelope *RequestEnvelope, request *LaunchRequest, response *OutgoingResponse) {
+	skill.OnLaunch = func(request *LaunchRequest, response *OutgoingResponse) {
 		response.Response.SetOutputSpeech("outputspeech")
 		response.Response.SetReprompt("reprompt")
 		response.Response.SimpleCard("TestCard", "TestCardText")

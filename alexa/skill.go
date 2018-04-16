@@ -22,12 +22,12 @@ import (
 // Skill configures the different Handlers for skill execution.
 type Skill struct {
 	ApplicationID      string
-	OnLaunch           func(*RequestEnvelope, *LaunchRequest, *OutgoingResponse)
-	OnIntent           func(*RequestEnvelope, *IntentRequest, *OutgoingResponse)
-	OnSessionEnded     func(*RequestEnvelope, *SessionEndedRequest, *OutgoingResponse)
-	OnAudioPlayerState func(*RequestEnvelope, *AudioPlayerRequest, *OutgoingResponse)
-	OnSystemException  func(*RequestEnvelope, *SystemExceptionEncounteredRequest, *OutgoingResponse)
-	OnGameEngineEvent  func(*RequestEnvelope, *GameEngineInputHandlerEventRequest, *OutgoingResponse)
+	OnLaunch           func(*LaunchRequest, *OutgoingResponse)
+	OnIntent           func(*IntentRequest, *OutgoingResponse)
+	OnSessionEnded     func(*SessionEndedRequest, *OutgoingResponse)
+	OnAudioPlayerState func(*AudioPlayerRequest, *OutgoingResponse)
+	OnSystemException  func(*SystemExceptionEncounteredRequest, *OutgoingResponse)
+	OnGameEngineEvent  func(*GameEngineInputHandlerEventRequest, *OutgoingResponse)
 }
 
 // GetSkillHandler provides a http.Handler to have the freedom to use any http framework.
@@ -114,42 +114,42 @@ func handleRequest(requestEnvelope *RequestEnvelope, skill *Skill) (*OutgoingRes
 			var request LaunchRequest
 			// Create concrete types
 			requestEnvelope.GetTypedRequest(&request)
-			skill.OnLaunch(requestEnvelope, &request, response)
+			skill.OnLaunch(&request, response)
 		}
 	} else if requestType == "IntentRequest" {
 		if skill.OnIntent != nil {
 			var request IntentRequest
 			// Create concrete types
 			requestEnvelope.GetTypedRequest(&request)
-			skill.OnIntent(requestEnvelope, &request, response)
+			skill.OnIntent(&request, response)
 		}
 	} else if requestType == "SessionEndedRequest" {
 		if skill.OnSessionEnded != nil {
 			var request SessionEndedRequest
 			// Create concrete types
 			requestEnvelope.GetTypedRequest(&request)
-			skill.OnSessionEnded(requestEnvelope, &request, response)
+			skill.OnSessionEnded(&request, response)
 		}
 	} else if strings.HasPrefix(requestType, "AudioPlayer.") {
 		if skill.OnAudioPlayerState != nil {
 			var request AudioPlayerRequest
 			// Create concrete types
 			requestEnvelope.GetTypedRequest(&request)
-			skill.OnAudioPlayerState(requestEnvelope, &request, response)
+			skill.OnAudioPlayerState(&request, response)
 		}
 	} else if strings.HasPrefix(requestType, "GameEngine.") {
 		if skill.OnGameEngineEvent != nil {
 			var request GameEngineInputHandlerEventRequest
 			// Create concrete types
 			requestEnvelope.GetTypedRequest(&request)
-			skill.OnGameEngineEvent(requestEnvelope, &request, response)
+			skill.OnGameEngineEvent(&request, response)
 		}
 	} else if requestType == "System.ExceptionEncountered" {
 		if skill.OnSystemException != nil {
 			var request SystemExceptionEncounteredRequest
 			// Create concrete types
 			requestEnvelope.GetTypedRequest(&request)
-			skill.OnSystemException(requestEnvelope, &request, response)
+			skill.OnSystemException(&request, response)
 		}
 	} else {
 		return nil, errors.New("Invalid request")

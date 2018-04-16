@@ -43,8 +43,8 @@ type Context struct {
 
 // System object that provides information about the current state of the Alexa service and the device interacting with your skill.
 type System struct {
-	ApiAccessToken string      `json:"apiAccessToken"`
-	ApiEndpoint    string      `json:"apiEndpoint"`
+	APIAccessToken string      `json:"apiAccessToken"`
+	APIEndpoint    string      `json:"apiEndpoint"`
 	Application    Application `json:"application"`
 	Device         Device      `json:"device"`
 	User           User        `json:"user"`
@@ -52,7 +52,7 @@ type System struct {
 
 // Device object providing information about the device used to send the request.
 type Device struct {
-	DeviceId            string                 `json:"deviceId"`
+	DeviceID            string                 `json:"deviceId"`
 	SupportedInterfaces map[string]interface{} `json:"supportedInterfaces"`
 }
 
@@ -63,12 +63,21 @@ type AudioPlayer struct {
 	PlayerActivity       string `json:"playerActivity"`
 }
 
+// requestEnvelopeDataProvider provides a way to set Context and Session metadata for common requests.
+type requestEnvelopeDataProvider interface {
+	setContext(ctx *Context)
+	setSession(session *Session)
+}
+
 // CommonRequest contains the attributes all alexa requests have in common.
 type CommonRequest struct {
 	Type      string `json:"type"`
 	RequestID string `json:"requestId"`
 	Timestamp string `json:"timestamp"`
 	Locale    string `json:"locale"`
+	// Set manually from request envelope
+	Session *Session
+	Context *Context
 }
 
 // LaunchRequest send by Alexa if a skill is started.
@@ -112,14 +121,23 @@ type AudioPlayerRequest struct {
 }
 
 // GetTypedRequest provides the request object mapped to the given struct
-func (request *RequestEnvelope) GetTypedRequest(requestObj interface{}) error {
-	data, _ := json.Marshal(request.Request)
+func (requestEnvelope *RequestEnvelope) GetTypedRequest(requestObj interface{}) error {
+	data, _ := json.Marshal(requestEnvelope.Request)
+	requestObj.(requestEnvelopeDataProvider).setContext(&requestEnvelope.Context)
+	requestObj.(requestEnvelopeDataProvider).setSession(&requestEnvelope.Session)
 	return json.Unmarshal(data, &requestObj)
 }
 
+func (cr *CommonRequest) setContext(ctx *Context) {
+	cr.Context = ctx
+}
+func (cr *CommonRequest) setSession(session *Session) {
+	cr.Session = session
+}
+
 // VerifyTimestamp checks if the the timestamp is not older than 30 seconds
-func (request *RequestEnvelope) VerifyTimestamp() bool {
-	timestampStr := request.Request.(map[string]interface{})["timestamp"].(string)
+func (requestEnvelope *RequestEnvelope) VerifyTimestamp() bool {
+	timestampStr := requestEnvelope.Request.(map[string]interface{})["timestamp"].(string)
 	requestTimestamp, err := time.Parse("2006-01-02T15:04:05Z", timestampStr)
 	if err != nil {
 		log.Fatalln("Error parsing request timestamp with value ", timestampStr)

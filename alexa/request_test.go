@@ -17,7 +17,7 @@ func TestLaunchRequest(t *testing.T) {
 		t.Fatal("Error occurred", err)
 		t.FailNow()
 	}
-	skill.OnLaunch = func(requestEnvelope *RequestEnvelope, request *LaunchRequest, response *OutgoingResponse) {
+	skill.OnLaunch = func(request *LaunchRequest, response *OutgoingResponse) {
 		assertEqual(t, "string", request.Locale, "Locale does not match")
 		assertEqual(t, "amzn1.echo-api.request.0000000-0000-0000-0000-00000000000", request.RequestID, "RequestID does not match")
 		assertEqual(t, "2015-05-13T12:34:56Z", request.Timestamp, "Timestamp does not match")
@@ -43,7 +43,7 @@ func TestIntentRequest(t *testing.T) {
 		t.Fatal("Error occurred", err)
 		t.FailNow()
 	}
-	skill.OnIntent = func(requestEnvelope *RequestEnvelope, request *IntentRequest, response *OutgoingResponse) {
+	skill.OnIntent = func(request *IntentRequest, response *OutgoingResponse) {
 		assertEqual(t, "COMPLETED", request.DialogState, "DialogState does not match")
 		assertEqual(t, "NONE", request.Intent.ConfirmationStatus, "ConfirmationStatus does not match")
 		assertEqual(t, "GetZodiacHoroscopeIntent", request.Intent.Name, "Name does not match")
@@ -68,7 +68,7 @@ func TestSessionEndedRequest(t *testing.T) {
 		t.Fatal("Error occurred", err)
 		t.FailNow()
 	}
-	skill.OnSessionEnded = func(requestEnvelope *RequestEnvelope, request *SessionEndedRequest, response *OutgoingResponse) {
+	skill.OnSessionEnded = func(request *SessionEndedRequest, response *OutgoingResponse) {
 		assertEqual(t, "SessionEndedRequest", request.Type, "Type does not match")
 		assertEqual(t, "USER_INITIATED", request.Reason, "Reason does not match")
 	}
@@ -88,15 +88,15 @@ func TestSessionAttributes(t *testing.T) {
 		t.Fatal("Error occurred", err)
 		t.FailNow()
 	}
-	skill.OnIntent = func(requestEnvelope *RequestEnvelope, request *IntentRequest, response *OutgoingResponse) {
-		assertEqual(t, false, requestEnvelope.Session.New, "Session.New does not match")
-		assertEqual(t, "amzn1.echo-api.session.0000000-0000-0000-0000-00000000000", requestEnvelope.Session.SessionID, "Session.SessionID does not match")
-		assertEqual(t, "amzn1.echo-sdk-ams.app.000000-d0ed-0000-ad00-000000d00ebe", requestEnvelope.Session.Application.ApplicationID, "Session.ApplicationID does not match")
-		assertEqual(t, "amzn1.account.AM3B00000000000000000000000", requestEnvelope.Session.User.UserID, "Session.UserID does not match")
-		assertEqual(t, "", requestEnvelope.Session.User.AccessToken, "")
-		assertEqual(t, true, requestEnvelope.Session.Attributes["supportedHoroscopePeriods"].(map[string]interface{})["daily"], "Session attribute daily does not match")
+	skill.OnIntent = func(request *IntentRequest, response *OutgoingResponse) {
+		assertEqual(t, false, request.Session.New, "Session.New does not match")
+		assertEqual(t, "amzn1.echo-api.session.0000000-0000-0000-0000-00000000000", request.Session.SessionID, "Session.SessionID does not match")
+		assertEqual(t, "amzn1.echo-sdk-ams.app.000000-d0ed-0000-ad00-000000d00ebe", request.Session.Application.ApplicationID, "Session.ApplicationID does not match")
+		assertEqual(t, "amzn1.account.AM3B00000000000000000000000", request.Session.User.UserID, "Session.UserID does not match")
+		assertEqual(t, "", request.Session.User.AccessToken, "")
+		assertEqual(t, true, request.Session.Attributes["supportedHoroscopePeriods"].(map[string]interface{})["daily"], "Session attribute daily does not match")
 		// Add an session attribute
-		requestEnvelope.Session.Attributes["newProp"] = "newPropValue"
+		request.Session.Attributes["newProp"] = "newPropValue"
 	}
 	response, err := handleRequest(&r, &skill)
 
@@ -116,11 +116,11 @@ func TestContextAttributes(t *testing.T) {
 		t.Fatal("Error occurred", err)
 		t.FailNow()
 	}
-	skill.OnIntent = func(requestEnvelope *RequestEnvelope, request *IntentRequest, response *OutgoingResponse) {
-		assertEqual(t, "amzn1.echo-sdk-ams.app.000000-d0ed-0000-ad00-000000d00ebe", requestEnvelope.Context.System.Application.ApplicationID, "")
-		assertEqual(t, "amzn1.account.AM3B00000000000000000000000", requestEnvelope.Context.System.User.UserID, "")
-		assertEqual(t, 0, requestEnvelope.Context.AudioPlayer.OffsetInMilliseconds, "")
-		assertEqual(t, "IDLE", requestEnvelope.Context.AudioPlayer.PlayerActivity, "")
+	skill.OnIntent = func(request *IntentRequest, response *OutgoingResponse) {
+		assertEqual(t, "amzn1.echo-sdk-ams.app.000000-d0ed-0000-ad00-000000d00ebe", request.Context.System.Application.ApplicationID, "")
+		assertEqual(t, "amzn1.account.AM3B00000000000000000000000", request.Context.System.User.UserID, "")
+		assertEqual(t, 0, request.Context.AudioPlayer.OffsetInMilliseconds, "")
+		assertEqual(t, "IDLE", request.Context.AudioPlayer.PlayerActivity, "")
 	}
 	_, err = handleRequest(&r, &skill)
 

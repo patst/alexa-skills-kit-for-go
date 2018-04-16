@@ -34,7 +34,7 @@ func main() {
 	log.Fatal(srv.ListenAndServe())
 }
 
-func intentDispatchHandler(requestEnvelope *alexa.RequestEnvelope, request *alexa.IntentRequest, response *alexa.OutgoingResponse) {
+func intentDispatchHandler(request *alexa.IntentRequest, response *alexa.OutgoingResponse) {
 	switch request.Intent.Name {
 	case "HelloWorldIntent":
 		helloWorldIntentHandler(request, response)
@@ -69,13 +69,13 @@ func helpIntentHandler(request *alexa.IntentRequest, outgoingResponse *alexa.Out
 	outgoingResponse.Response.SimpleCard("HelloWorld", speechText)
 }
 
-func launchRequestHandler(requestEnvelope *alexa.RequestEnvelope, request *alexa.LaunchRequest, outgoingResponse *alexa.OutgoingResponse) {
+func launchRequestHandler(request *alexa.LaunchRequest, outgoingResponse *alexa.OutgoingResponse) {
 	speechText := "Welcome to the Alexa Skills Kit, you can say hello"
 	outgoingResponse.Response.SetOutputSpeech(speechText)
 	outgoingResponse.Response.SetReprompt(speechText)
 	outgoingResponse.Response.SimpleCard("HelloWorld", speechText)
 }
 
-func sessionEndedRequestHandler(requestEnvelope *alexa.RequestEnvelope, request *alexa.SessionEndedRequest, outgoingResponse *alexa.OutgoingResponse) {
+func sessionEndedRequestHandler(request *alexa.SessionEndedRequest, outgoingResponse *alexa.OutgoingResponse) {
 	// cleanup stuff
 }
