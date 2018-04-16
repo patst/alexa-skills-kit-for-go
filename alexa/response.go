@@ -7,6 +7,7 @@ type OutgoingResponse struct {
 	Response          *Response              `json:"response,omitempty"`
 }
 
+// Response payload for alexa requests
 type Response struct {
 	OutputSpeech     *OutputSpeech `json:"outputSpeech,omitempty"`
 	Card             *Card         `json:"card,omitempty"`
@@ -15,16 +16,19 @@ type Response struct {
 	Directives       []interface{} `json:"directives,omitempty"`
 }
 
+//OutputSpeech containing the speech to render to the user.
 type OutputSpeech struct {
 	Type string `json:"type"`
 	Text string `json:"text,omitempty"`
 	Ssml string `json:"ssml,omitempty"`
 }
 
+// Reprompt containing the outputSpeech to use if a re-prompt is necessary.
 type Reprompt struct {
 	OutputSpeech OutputSpeech `json:"outputSpeech"`
 }
 
+// Card containing a card to render to the Amazon Alexa App
 type Card struct {
 	Type    string `json:"type,omitempty"`
 	Title   string `json:"title,omitempty"`
@@ -48,6 +52,7 @@ func NewOutgoingResponse(sessionAttributes map[string]interface{}) *OutgoingResp
 	}
 }
 
+// SetOutputSpeech creates a PlainText output speech object for the response. Any present output speech is overwritten.
 func (response *Response) SetOutputSpeech(text string) *Response {
 	response.OutputSpeech = &OutputSpeech{
 		Type: "PlainText",
@@ -55,6 +60,8 @@ func (response *Response) SetOutputSpeech(text string) *Response {
 	}
 	return response
 }
+
+// SetReprompt creates a PlainText reprompt output speech object for the response. Any present reprompt is overwritten.
 func (response *Response) SetReprompt(text string) *Response {
 	response.Reprompt = &Reprompt{
 		OutputSpeech: OutputSpeech{
@@ -64,6 +71,8 @@ func (response *Response) SetReprompt(text string) *Response {
 	}
 	return response
 }
+
+// SimpleCard creates a simple card for the response. Any present card is overwritten.
 func (response *Response) SimpleCard(title string, content string) *Response {
 	response.Card = &Card{
 		Type:    "Simple",

@@ -24,13 +24,13 @@ func TestLaunchRequest(t *testing.T) {
 		assertEqual(t, "LaunchRequest", request.Type, "Type does not match")
 		response.Response.SetOutputSpeech("output")
 	}
-	response, err := HandleRequest(&r, &skill)
+	response, err := handleRequest(&r, &skill)
 
 	assertEqual(t, "output", response.Response.OutputSpeech.Text, "OutputSpeech does not match")
 	assertEqual(t, "PlainText", response.Response.OutputSpeech.Type, "OutputSpeech Type does not match")
 
 	if err != nil {
-		t.Fatal("Error occured", err)
+		t.Fatal("Error occurred", err)
 		t.FailNow()
 	}
 }
@@ -40,7 +40,7 @@ func TestIntentRequest(t *testing.T) {
 	var r RequestEnvelope
 	err := json.Unmarshal(launchRequest, &r)
 	if err != nil {
-		t.Fatal("Error occured", err)
+		t.Fatal("Error occurred", err)
 		t.FailNow()
 	}
 	skill.OnIntent = func(requestEnvelope *RequestEnvelope, request *IntentRequest, response *OutgoingResponse) {
@@ -52,10 +52,10 @@ func TestIntentRequest(t *testing.T) {
 		assertEqual(t, "NONE", request.Intent.Slots["ZodiacSign"].ConfirmationStatus, "ConfirmationStatus does not match")
 
 	}
-	_, err = HandleRequest(&r, &skill)
+	_, err = handleRequest(&r, &skill)
 
 	if err != nil {
-		t.Fatal("Error occured", err)
+		t.Fatal("Error occurred", err)
 		t.FailNow()
 	}
 }
@@ -65,17 +65,17 @@ func TestSessionEndedRequest(t *testing.T) {
 	var r RequestEnvelope
 	err := json.Unmarshal(launchRequest, &r)
 	if err != nil {
-		t.Fatal("Error occured", err)
+		t.Fatal("Error occurred", err)
 		t.FailNow()
 	}
 	skill.OnSessionEnded = func(requestEnvelope *RequestEnvelope, request *SessionEndedRequest, response *OutgoingResponse) {
 		assertEqual(t, "SessionEndedRequest", request.Type, "Type does not match")
 		assertEqual(t, "USER_INITIATED", request.Reason, "Reason does not match")
 	}
-	_, err = HandleRequest(&r, &skill)
+	_, err = handleRequest(&r, &skill)
 
 	if err != nil {
-		t.Fatal("Error occured", err)
+		t.Fatal("Error occurred", err)
 		t.FailNow()
 	}
 }
@@ -85,7 +85,7 @@ func TestSessionAttributes(t *testing.T) {
 	var r RequestEnvelope
 	err := json.Unmarshal(launchRequest, &r)
 	if err != nil {
-		t.Fatal("Error occured", err)
+		t.Fatal("Error occurred", err)
 		t.FailNow()
 	}
 	skill.OnIntent = func(requestEnvelope *RequestEnvelope, request *IntentRequest, response *OutgoingResponse) {
@@ -98,12 +98,12 @@ func TestSessionAttributes(t *testing.T) {
 		// Add an session attribute
 		requestEnvelope.Session.Attributes["newProp"] = "newPropValue"
 	}
-	response, err := HandleRequest(&r, &skill)
+	response, err := handleRequest(&r, &skill)
 
 	assertEqual(t, "newPropValue", response.SessionAttributes["newProp"], "Session attribute newProp does not match")
 
 	if err != nil {
-		t.Fatal("Error occured", err)
+		t.Fatal("Error occurred", err)
 		t.FailNow()
 	}
 }
@@ -113,7 +113,7 @@ func TestContextAttributes(t *testing.T) {
 	var r RequestEnvelope
 	err := json.Unmarshal(launchRequest, &r)
 	if err != nil {
-		t.Fatal("Error occured", err)
+		t.Fatal("Error occurred", err)
 		t.FailNow()
 	}
 	skill.OnIntent = func(requestEnvelope *RequestEnvelope, request *IntentRequest, response *OutgoingResponse) {
@@ -122,10 +122,10 @@ func TestContextAttributes(t *testing.T) {
 		assertEqual(t, 0, requestEnvelope.Context.AudioPlayer.OffsetInMilliseconds, "")
 		assertEqual(t, "IDLE", requestEnvelope.Context.AudioPlayer.PlayerActivity, "")
 	}
-	_, err = HandleRequest(&r, &skill)
+	_, err = handleRequest(&r, &skill)
 
 	if err != nil {
-		t.Fatal("Error occured", err)
+		t.Fatal("Error occurred", err)
 		t.FailNow()
 	}
 }

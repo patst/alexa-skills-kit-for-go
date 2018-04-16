@@ -1,24 +1,25 @@
 package helloworld
 
 import (
-	"github.com/gorilla/mux"
-	"github.com/patst/alexa-skills-kit-for-go/alexa"
 	"log"
 	"net/http"
 	"time"
+
+	"github.com/gorilla/mux"
+	"github.com/patst/alexa-skills-kit-for-go/alexa"
 )
 
-var Skill alexa.Skill
+var skill alexa.Skill
 
 func main() {
 	router := mux.NewRouter()
-	Skill = alexa.Skill{
+	skill = alexa.Skill{
 		ApplicationId:  "FILL WITH SKILL ID", // Echo App ID from Amazon Dashboard
 		OnIntent:       intentDispatchHandler,
 		OnLaunch:       launchRequestHandler,
 		OnSessionEnded: sessionEndedRequestHandler,
 	}
-	skillHandler := Skill.GetSkillHandler()
+	skillHandler := skill.GetSkillHandler()
 
 	router.Handle("/echo/api/trueorfalse", skillHandler).Methods("POST")
 

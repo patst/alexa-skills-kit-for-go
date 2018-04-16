@@ -1,5 +1,6 @@
 package alexa
 
+// GameEngineStartInputDirective directive to start the game engine.
 type GameEngineStartInputDirective struct {
 	Type                 string                                 `json:"type,omitempty"`
 	Timeout              int                                    `json:"timeout"`
@@ -9,7 +10,7 @@ type GameEngineStartInputDirective struct {
 	Events               map[string]GameEngineRegistrationEvent `json:"events"`
 }
 
-// This recognizer is true when all of the specified events have occurred in the specified order.
+// GameEnginePatternRecognizer is true when all of the specified events have occurred in the specified order.
 type GameEnginePatternRecognizer struct {
 	// Must be match
 	Type      string              `json:"type"`
@@ -20,27 +21,28 @@ type GameEnginePatternRecognizer struct {
 	Pattern   []GameEnginePattern `json:"pattern"`
 }
 
+// GameEnginePattern is an object that provides all of the events that need to occur, in a specific order, for this recognizer to be true
 type GameEnginePattern struct {
 	GadgetIds []string `json:"gadgetIds,omitempty"`
 	Colors    []string `json:"colors,omitempty"`
 	Action    string   `json:"action,omitempty"`
 }
 
-// The deviation recognizer returns true when another specified recognizer reports that the player has deviated from its expected pattern.
+// GameEngineDeviationRecognizer returns true when another specified recognizer reports that the player has deviated from its expected pattern.
 type GameEngineDeviationRecognizer struct {
 	// Must be deviation
 	Type       string `json:"type"`
 	Recognizer string `json:"recognizer"`
 }
 
-// This recognizer consults another recognizer for the degree of completion, and is true if that degree is above the specified threshold. The completion parameter is specified as a decimal percentage.
+// GameEngineProgressRecognizer consults another recognizer for the degree of completion, and is true if that degree is above the specified threshold. The completion parameter is specified as a decimal percentage.
 type GameEngineProgressRecognizer struct {
 	// Must be progress
 	Type       string `json:"type"`
 	Recognizer string `json:"recognizer"`
 }
 
-// The events object is where you define the conditions that must be met for your skill to be notified of Echo Button input. You must define at least one event.
+// GameEngineRegistrationEvent object is where you define the conditions that must be met for your skill to be notified of Echo Button input. You must define at least one event.
 type GameEngineRegistrationEvent struct {
 	Meets []string `json:"meets"`
 	Fails []string `json:"fails,omitempty"`
@@ -51,11 +53,11 @@ type GameEngineRegistrationEvent struct {
 	TriggerTimeMilliseconds int    `json:"triggerTimeMilliseconds,omitempty"`
 }
 
-// A list of events sent from the Input Handler. Each event that you specify will be sent only once to your skill as it becomes true. Note that in any InputHandlerEvent request one or more events may have become true at the same time.
+// GameEngineInputEvent contains list of events sent from the Input Handler. Each event that you specify will be sent only once to your skill as it becomes true. Note that in any InputHandlerEvent request one or more events may have become true at the same time.
 type GameEngineInputEvent struct {
 	Name        string `json:"name"`
 	InputEvents []struct {
-		GadgetId  string `json:"gadgetId"`
+		GadgetID  string `json:"gadgetId"`
 		Timestamp string `json:"timestamp"`
 		Action    string `json:"action"`
 		Color     string `json:"color"`
@@ -67,7 +69,7 @@ type GameEngineInputEvent struct {
 type GameEngineInputHandlerEventRequest struct {
 	CommonRequest
 	// From GamEngine.InputHandlerEvent
-	OriginatingRequestId string                 `json:"originatingRequestId"`
+	OriginatingRequestID string                 `json:"originatingRequestId"`
 	Events               []GameEngineInputEvent `json:"events"`
 }
 

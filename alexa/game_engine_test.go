@@ -9,18 +9,18 @@ import (
 
 func TestGameEngineInputEvent(t *testing.T) {
 	skill := Skill{
-		ApplicationId: "amzn1.echo-sdk-ams.app.000000-d0ed-0000-ad00-000000d00ebe",
+		ApplicationID: "amzn1.echo-sdk-ams.app.000000-d0ed-0000-ad00-000000d00ebe",
 	}
 	skillHandler := skill.GetSkillHandler()
 
 	skill.OnGameEngineEvent = func(requestEnvelope *RequestEnvelope, request *GameEngineInputHandlerEventRequest, response *OutgoingResponse) {
 		assertEqual(t, "GameEngine.InputHandlerEvent", request.Type, "")
-		assertEqual(t, "amzn1.echo-api.request.463eaf71-0206-412e-b7dd-164936862994", request.OriginatingRequestId, "")
+		assertEqual(t, "amzn1.echo-api.request.463eaf71-0206-412e-b7dd-164936862994", request.OriginatingRequestID, "")
 		assertEqual(t, "button_down_event", request.Events[0].Name, "")
 		assertEqual(t, "down", request.Events[0].InputEvents[0].Action, "")
 		assertEqual(t, "press", request.Events[0].InputEvents[0].Feature, "")
 		assertEqual(t, "0000FF", request.Events[0].InputEvents[0].Color, "")
-		assertEqual(t, "amzn1.ask.gadget.05RPH7PJG9C61DHI4QR0RLOQOHKUMULN8NS600CRDU8UGIM96405THTNT0283R6JJTBOND2Q9LK4MD84880C4U6J4AUHU4689FF3TTBITEACDA8V8B8E5MFRDOUM247V8GUVJKA09O1CBVSHK6LAD2J0BLV607IH03U4A13S9MS9OUO02EKIS", request.Events[0].InputEvents[0].GadgetId, "")
+		assertEqual(t, "amzn1.ask.gadget.05RPH7PJG9C61DHI4QR0RLOQOHKUMULN8NS600CRDU8UGIM96405THTNT0283R6JJTBOND2Q9LK4MD84880C4U6J4AUHU4689FF3TTBITEACDA8V8B8E5MFRDOUM247V8GUVJKA09O1CBVSHK6LAD2J0BLV607IH03U4A13S9MS9OUO02EKIS", request.Events[0].InputEvents[0].GadgetID, "")
 	}
 
 	launchRequestReader, err := os.Open("../resources/gameengine_inputhandlerevent_request.json")
@@ -39,7 +39,7 @@ func TestGameEngineInputEvent(t *testing.T) {
 
 func TestRegisterForEvents(t *testing.T) {
 	skill := Skill{
-		ApplicationId: "amzn1.echo-sdk-ams.app.000000-d0ed-0000-ad00-000000d00ebe",
+		ApplicationID: "amzn1.echo-sdk-ams.app.000000-d0ed-0000-ad00-000000d00ebe",
 	}
 	skillHandler := skill.GetSkillHandler()
 

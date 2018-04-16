@@ -35,11 +35,13 @@ type User struct {
 	AccessToken string `json:"accessToken,omitempty"`
 }
 
+// Context object provides your skill with information about the current state of the Alexa service and device at the time the request is sent to your service.
 type Context struct {
 	System      System      `json:"system"`
 	AudioPlayer AudioPlayer `json:"audioPlayer"`
 }
 
+// System object that provides information about the current state of the Alexa service and the device interacting with your skill.
 type System struct {
 	ApiAccessToken string      `json:"apiAccessToken"`
 	ApiEndpoint    string      `json:"apiEndpoint"`
@@ -48,17 +50,20 @@ type System struct {
 	User           User        `json:"user"`
 }
 
+// Device object providing information about the device used to send the request.
 type Device struct {
 	DeviceId            string                 `json:"deviceId"`
 	SupportedInterfaces map[string]interface{} `json:"supportedInterfaces"`
 }
 
+// AudioPlayer object providing the current state for the AudioPlayer interface.
 type AudioPlayer struct {
 	Token                string `json:"token,omitempty"`
 	OffsetInMilliseconds int    `json:"offsetInMilliseconds,omitempty"`
 	PlayerActivity       string `json:"playerActivity"`
 }
 
+// CommonRequest contains the attributes all alexa requests have in common.
 type CommonRequest struct {
 	Type      string `json:"type"`
 	RequestID string `json:"requestId"`
@@ -66,10 +71,12 @@ type CommonRequest struct {
 	Locale    string `json:"locale"`
 }
 
+// LaunchRequest send by Alexa if a skill is started.
 type LaunchRequest struct {
 	CommonRequest
 }
 
+// IntentRequest is send if a intent is invoked.
 type IntentRequest struct {
 	CommonRequest
 	Intent      Intent `json:"intent,omitempty"`
@@ -91,12 +98,14 @@ type Slot struct {
 	Resolutions        interface{} `json:"resolutions"`
 }
 
+// SessionEndedRequest if a skill is stopped or cancelled.
 type SessionEndedRequest struct {
 	CommonRequest
 	Reason string      `json:"reason,omitempty"`
 	Error  interface{} `json:"error,omitempty"`
 }
 
+// AudioPlayerRequest for input events of audio player interface.
 type AudioPlayerRequest struct {
 	CommonRequest
 	// tbd

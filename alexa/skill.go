@@ -21,7 +21,7 @@ import (
 
 // Skill configures the different Handlers for skill execution.
 type Skill struct {
-	ApplicationId      string
+	ApplicationID      string
 	OnLaunch           func(*RequestEnvelope, *LaunchRequest, *OutgoingResponse)
 	OnIntent           func(*RequestEnvelope, *IntentRequest, *OutgoingResponse)
 	OnSessionEnded     func(*RequestEnvelope, *SessionEndedRequest, *OutgoingResponse)
@@ -55,11 +55,11 @@ func (skill *Skill) GetSkillHandler() http.Handler {
 			return
 		}
 
-		if !IsRequestValid(requestEnvelope, skill.ApplicationId, isDev, w) {
+		if !isRequestValid(requestEnvelope, skill.ApplicationID, isDev, w) {
 			return
 		}
 
-		response, err := HandleRequest(requestEnvelope, skill)
+		response, err := handleRequest(requestEnvelope, skill)
 
 		if err != nil {
 			HTTPError(w, err.Error(), "Bad Request", 400)
@@ -78,7 +78,7 @@ func (skill *Skill) GetSkillHandler() http.Handler {
 	})
 }
 
-func IsRequestValid(requestEnvelope *RequestEnvelope, expectedAppId string, isDev bool, w http.ResponseWriter) bool {
+func isRequestValid(requestEnvelope *RequestEnvelope, expectedAppID string, isDev bool, w http.ResponseWriter) bool {
 	// Check the timestamp
 	if !requestEnvelope.VerifyTimestamp() && !isDev {
 		HTTPError(w, "Request too old to continue (>30s).", "Bad Request", 400)
@@ -86,14 +86,14 @@ func IsRequestValid(requestEnvelope *RequestEnvelope, expectedAppId string, isDe
 	}
 
 	// Check the app id
-	if requestEnvelope.Context.System.Application.ApplicationID != expectedAppId {
+	if requestEnvelope.Context.System.Application.ApplicationID != expectedAppID {
 		HTTPError(w, "Alexa AppplicationId mismatch!", "Bad Request", 400)
 		return false
 	}
 	return true
 }
 
-func HandleRequest(requestEnvelope *RequestEnvelope, skill *Skill) (*OutgoingResponse, error) {
+func handleRequest(requestEnvelope *RequestEnvelope, skill *Skill) (*OutgoingResponse, error) {
 	//Read the type for this request to do the correct routing
 	var commonRequest CommonRequest
 	err := requestEnvelope.GetTypedRequest(&commonRequest)
@@ -157,6 +157,7 @@ func HandleRequest(requestEnvelope *RequestEnvelope, skill *Skill) (*OutgoingRes
 	return response, nil
 }
 
+// HTTPError logs the logMsg and sets the given errCode
 func HTTPError(w http.ResponseWriter, logMsg string, err string, errCode int) {
 	if logMsg != "" {
 		log.Println(logMsg)
@@ -243,12 +244,12 @@ func isValidAlexaCertificate(w http.ResponseWriter, r *http.Request, isDev bool)
 func readCert(certURL string) ([]byte, error) {
 	cert, err := http.Get(certURL)
 	if err != nil {
-		return nil, errors.New("Could not download Amazon cert file.")
+		return nil, errors.New("Could not download Amazon cert file")
 	}
 	defer cert.Body.Close()
 	certContents, err := ioutil.ReadAll(cert.Body)
 	if err != nil {
-		return nil, errors.New("Could not read Amazon cert file.")
+		return nil, errors.New("Could not read Amazon cert file")
 	}
 
 	return certContents, nil

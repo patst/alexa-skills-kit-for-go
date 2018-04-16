@@ -9,7 +9,7 @@ import (
 
 func TestCertificateValidation(t *testing.T) {
 	skill := Skill{
-		ApplicationId: "amzn1.echo-sdk-ams.app.000000-d0ed-0000-ad00-000000d00ebe",
+		ApplicationID: "amzn1.echo-sdk-ams.app.000000-d0ed-0000-ad00-000000d00ebe",
 	}
 	skillHandler := skill.GetSkillHandler()
 
@@ -38,7 +38,7 @@ func TestCertificateValidation(t *testing.T) {
 
 func TestWrongApplicationId(t *testing.T) {
 	skill := Skill{
-		ApplicationId: "wrong app id",
+		ApplicationID: "wrong app id",
 	}
 	skillHandler := skill.GetSkillHandler()
 
