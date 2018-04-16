@@ -1,4 +1,6 @@
-# `alexa-skills-kit-for-go`: Create Amazon Alexa Go skills 
+## `alexa-skills-kit-for-go`: Create Amazon Alexa Go skills 
+
+[![Go Report Card](https://goreportcard.com/badge/patst/alexa-skills-kit-for-go)](https://goreportcard.com/report/patst/alexa-skills-kit-for-go) [![Build Status](https://travis-ci.org/patst/alexa-skills-kit-for-go.svg?branch=master)](https://travis-ci.org/patst/alexa-skills-kit-for-go) [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/patst/alexa-skills-kit-for-go/blob/master/LICENSE)
 
 Unfortunately Amazon does only provide a Alexa SDK for building skills with Java and NodeJS. 
 
@@ -12,7 +14,6 @@ I try to create some examples how to use the library. The examples will show how
 ### Hello world
 
 There is a [hello world example](example/helloworld) which reimplemented the [Amazon hello world example](https://github.com/alexa/alexa-skills-kit-sdk-for-java/tree/2.0.x/samples).
-
 
 ## Next Steps
 
