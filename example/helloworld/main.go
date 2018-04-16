@@ -14,7 +14,7 @@ var skill alexa.Skill
 func main() {
 	router := mux.NewRouter()
 	skill = alexa.Skill{
-		ApplicationId:  "FILL WITH SKILL ID", // Echo App ID from Amazon Dashboard
+		ApplicationID:  "FILL WITH SKILL ID", // Echo App ID from Amazon Dashboard
 		OnIntent:       intentDispatchHandler,
 		OnLaunch:       launchRequestHandler,
 		OnSessionEnded: sessionEndedRequestHandler,
