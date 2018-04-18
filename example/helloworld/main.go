@@ -19,7 +19,7 @@ func main() {
 		OnLaunch:       launchRequestHandler,
 		OnSessionEnded: sessionEndedRequestHandler,
 	}
-	skillHandler := skill.GetHttpSkillHandler()
+	skillHandler := skill.GetHTTPSkillHandler()
 
 	router.Handle("/echo/api/trueorfalse", skillHandler).Methods("POST")
 
