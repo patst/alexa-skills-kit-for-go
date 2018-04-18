@@ -1,6 +1,7 @@
 package alexa
 
 import (
+	"github.com/stretchr/testify/assert"
 	"net/http"
 	"net/http/httptest"
 	"os"
@@ -14,13 +15,13 @@ func TestGameEngineInputEvent(t *testing.T) {
 	skillHandler := skill.GetHTTPSkillHandler()
 
 	skill.OnGameEngineEvent = func(request *GameEngineInputHandlerEventRequest, response *ResponseEnvelope) {
-		assertEqual(t, "GameEngine.InputHandlerEvent", request.Type, "")
-		assertEqual(t, "amzn1.echo-api.request.463eaf71-0206-412e-b7dd-164936862994", request.OriginatingRequestID, "")
-		assertEqual(t, "button_down_event", request.Events[0].Name, "")
-		assertEqual(t, "down", request.Events[0].InputEvents[0].Action, "")
-		assertEqual(t, "press", request.Events[0].InputEvents[0].Feature, "")
-		assertEqual(t, "0000FF", request.Events[0].InputEvents[0].Color, "")
-		assertEqual(t, "amzn1.ask.gadget.05RPH7PJG9C61DHI4QR0RLOQOHKUMULN8NS600CRDU8UGIM96405THTNT0283R6JJTBOND2Q9LK4MD84880C4U6J4AUHU4689FF3TTBITEACDA8V8B8E5MFRDOUM247V8GUVJKA09O1CBVSHK6LAD2J0BLV607IH03U4A13S9MS9OUO02EKIS", request.Events[0].InputEvents[0].GadgetID, "")
+		assert.Equal(t, "GameEngine.InputHandlerEvent", request.Type, "")
+		assert.Equal(t, "amzn1.echo-api.request.463eaf71-0206-412e-b7dd-164936862994", request.OriginatingRequestID, "")
+		assert.Equal(t, "button_down_event", request.Events[0].Name, "")
+		assert.Equal(t, "down", request.Events[0].InputEvents[0].Action, "")
+		assert.Equal(t, "press", request.Events[0].InputEvents[0].Feature, "")
+		assert.Equal(t, "0000FF", request.Events[0].InputEvents[0].Color, "")
+		assert.Equal(t, "amzn1.ask.gadget.05RPH7PJG9C61DHI4QR0RLOQOHKUMULN8NS600CRDU8UGIM96405THTNT0283R6JJTBOND2Q9LK4MD84880C4U6J4AUHU4689FF3TTBITEACDA8V8B8E5MFRDOUM247V8GUVJKA09O1CBVSHK6LAD2J0BLV607IH03U4A13S9MS9OUO02EKIS", request.Events[0].InputEvents[0].GadgetID, "")
 	}
 
 	launchRequestReader, err := os.Open("../resources/gameengine_inputhandlerevent_request.json")

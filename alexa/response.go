@@ -57,11 +57,11 @@ func NewResponseEnvelope(sessionAttributes map[string]interface{}) *ResponseEnve
 	}
 }
 
-// SetOutputSpeech creates a PlainText output speech object for the response. Any present output speech is overwritten.
+// SetOutputSpeech creates a SSML output speech object for the response. Any present output speech is overwritten.
 func (response *Response) SetOutputSpeech(text string) *Response {
 	response.OutputSpeech = &OutputSpeech{
-		Type: "PlainText",
-		Text: text,
+		Type: "SSML",
+		Ssml: "<speak> " + text + " </speak>",
 	}
 	return response
 }
@@ -85,4 +85,9 @@ func (response *Response) SimpleCard(title string, content string) *Response {
 		Content: content,
 	}
 	return response
+}
+
+// AddDirective adds a directive to the slice of existing directives for a response.
+func (response *Response) AddDirective(directive interface{}) {
+	response.Directives = append(response.Directives, directive)
 }

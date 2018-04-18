@@ -10,6 +10,12 @@ type GameEngineStartInputDirective struct {
 	Events               map[string]GameEngineRegistrationEvent `json:"events"`
 }
 
+// GameEngineStopInputHandlerDirective stops Echo Button events from being sent to your skill.
+type GameEngineStopInputHandlerDirective struct {
+	Type                 string `json:"type,omitempty"`
+	OriginatingRequestID string `json:"originatingRequestId"`
+}
+
 // GameEnginePatternRecognizer is true when all of the specified events have occurred in the specified order.
 type GameEnginePatternRecognizer struct {
 	// Must be match
@@ -77,5 +83,13 @@ type GameEngineInputHandlerEventRequest struct {
 func NewGameEngineStartInputDirective() *GameEngineStartInputDirective {
 	return &GameEngineStartInputDirective{
 		Type: "GameEngine.StartInputHandler",
+	}
+}
+
+// NewGameEngineStopInputHandlerDirective creates a new directive to stop listening for input events.
+func NewGameEngineStopInputHandlerDirective(originatingRequestID string) *GameEngineStopInputHandlerDirective {
+	return &GameEngineStopInputHandlerDirective{
+		Type:                 "GameEngine.StopInputHandler",
+		OriginatingRequestID: originatingRequestID,
 	}
 }
