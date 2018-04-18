@@ -11,7 +11,7 @@ func TestCertificateValidation(t *testing.T) {
 	skill := Skill{
 		ApplicationID: "amzn1.echo-sdk-ams.app.000000-d0ed-0000-ad00-000000d00ebe",
 	}
-	skillHandler := skill.GetSkillHandler()
+	skillHandler := skill.GetHTTPSkillHandler()
 
 	launchRequestReader, err := os.Open("../resources/launch_request.json")
 	if err != nil {
@@ -40,7 +40,7 @@ func TestWrongApplicationId(t *testing.T) {
 	skill := Skill{
 		ApplicationID: "wrong app id",
 	}
-	skillHandler := skill.GetSkillHandler()
+	skillHandler := skill.GetHTTPSkillHandler()
 
 	launchRequestReader, err := os.Open("../resources/launch_request.json")
 	if err != nil {

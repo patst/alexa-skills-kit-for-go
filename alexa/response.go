@@ -1,7 +1,7 @@
 package alexa
 
-// OutgoingResponse is the complete object returned for a alexa POST request.
-type OutgoingResponse struct {
+// ResponseEnvelope is the envelope for the object returned for a alexa POST request.
+type ResponseEnvelope struct {
 	Version           string                 `json:"version"`
 	SessionAttributes map[string]interface{} `json:"sessionAttributes,omitempty"`
 	Response          *Response              `json:"response,omitempty"`
@@ -30,22 +30,27 @@ type Reprompt struct {
 
 // Card containing a card to render to the Amazon Alexa App
 type Card struct {
-	Type    string `json:"type,omitempty"`
-	Title   string `json:"title,omitempty"`
+	// A string describing the type of card to render. Values: 'Simple', 'Standard', 'LinkAccount'
+	Type string `json:"type,omitempty"`
+	// A string containing the title of the card. (not applicable for cards of type LinkAccount).
+	Title string `json:"title,omitempty"`
+	// A string containing the contents of a Simple card (not applicable for cards of type Standard or LinkAccount).
 	Content string `json:"content,omitempty"`
-	Text    string `json:"text,omitempty"`
-	Image   struct {
+	// A string containing the contents of a Simple card (not applicable for cards of type Standard or LinkAccount).
+	Text string `json:"text,omitempty"`
+	// An image object that specifies the URLs for the image to display on a Standard card. Only applicable for Standard cards.
+	Image struct {
 		SmallImageURL string `json:"smallImageUrl,omitempty"`
 		LargeImageURL string `json:"largeImageUrl,omitempty"`
 	} `json:"image,omitempty"`
 }
 
-// NewOutgoingResponse creates a response skeletion for alexa responses
-func NewOutgoingResponse(sessionAttributes map[string]interface{}) *OutgoingResponse {
+// NewResponseEnvelope creates a response skeletion for alexa responses
+func NewResponseEnvelope(sessionAttributes map[string]interface{}) *ResponseEnvelope {
 	if sessionAttributes == nil {
 		sessionAttributes = make(map[string]interface{})
 	}
-	return &OutgoingResponse{
+	return &ResponseEnvelope{
 		Version:           "1.0",
 		Response:          &Response{},
 		SessionAttributes: sessionAttributes,

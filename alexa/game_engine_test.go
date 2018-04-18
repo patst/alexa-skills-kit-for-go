@@ -11,9 +11,9 @@ func TestGameEngineInputEvent(t *testing.T) {
 	skill := Skill{
 		ApplicationID: "amzn1.echo-sdk-ams.app.000000-d0ed-0000-ad00-000000d00ebe",
 	}
-	skillHandler := skill.GetSkillHandler()
+	skillHandler := skill.GetHTTPSkillHandler()
 
-	skill.OnGameEngineEvent = func(request *GameEngineInputHandlerEventRequest, response *OutgoingResponse) {
+	skill.OnGameEngineEvent = func(request *GameEngineInputHandlerEventRequest, response *ResponseEnvelope) {
 		assertEqual(t, "GameEngine.InputHandlerEvent", request.Type, "")
 		assertEqual(t, "amzn1.echo-api.request.463eaf71-0206-412e-b7dd-164936862994", request.OriginatingRequestID, "")
 		assertEqual(t, "button_down_event", request.Events[0].Name, "")
@@ -41,9 +41,9 @@ func TestRegisterForEvents(t *testing.T) {
 	skill := Skill{
 		ApplicationID: "amzn1.echo-sdk-ams.app.000000-d0ed-0000-ad00-000000d00ebe",
 	}
-	skillHandler := skill.GetSkillHandler()
+	skillHandler := skill.GetHTTPSkillHandler()
 
-	skill.OnLaunch = func(request *LaunchRequest, response *OutgoingResponse) {
+	skill.OnLaunch = func(request *LaunchRequest, response *ResponseEnvelope) {
 		response.Response.SetOutputSpeech("outputspeech")
 		response.Response.SetReprompt("reprompt")
 		response.Response.SimpleCard("TestCard", "TestCardText")
