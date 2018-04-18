@@ -1,6 +1,6 @@
 ## `alexa-skills-kit-for-go`: Create Amazon Alexa Go skills 
 
-[![Go Report Card](https://goreportcard.com/badge/patst/alexa-skills-kit-for-go)](https://goreportcard.com/report/patst/alexa-skills-kit-for-go) [![Build Status](https://travis-ci.org/patst/alexa-skills-kit-for-go.svg?branch=master)](https://travis-ci.org/patst/alexa-skills-kit-for-go) [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/patst/alexa-skills-kit-for-go/blob/master/LICENSE)
+[![Go Report Card](https://goreportcard.com/badge/patst/alexa-skills-kit-for-go)](https://goreportcard.com/report/patst/alexa-skills-kit-for-go) [![Build Status](https://travis-ci.org/patst/alexa-skills-kit-for-go.svg?branch=master)](https://travis-ci.org/patst/alexa-skills-kit-for-go) [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/patst/alexa-skills-kit-for-go/blob/master/LICENSE) [![GoDoc](https://godoc.org/github.com/patst/alexa-skills-kit-for-go?status.svg)](https://godoc.org/github.com/patst/alexa-skills-kit-for-go)
 
 Unfortunately Amazon does only provide a Alexa SDK for building skills with Java and NodeJS.
 

@@ -30,11 +30,16 @@ type Reprompt struct {
 
 // Card containing a card to render to the Amazon Alexa App
 type Card struct {
-	Type    string `json:"type,omitempty"`
-	Title   string `json:"title,omitempty"`
+	// A string describing the type of card to render. Values: 'Simple', 'Standard', 'LinkAccount'
+	Type string `json:"type,omitempty"`
+	// A string containing the title of the card. (not applicable for cards of type LinkAccount).
+	Title string `json:"title,omitempty"`
+	// A string containing the contents of a Simple card (not applicable for cards of type Standard or LinkAccount).
 	Content string `json:"content,omitempty"`
-	Text    string `json:"text,omitempty"`
-	Image   struct {
+	// A string containing the contents of a Simple card (not applicable for cards of type Standard or LinkAccount).
+	Text string `json:"text,omitempty"`
+	// An image object that specifies the URLs for the image to display on a Standard card. Only applicable for Standard cards.
+	Image struct {
 		SmallImageURL string `json:"smallImageUrl,omitempty"`
 		LargeImageURL string `json:"largeImageUrl,omitempty"`
 	} `json:"image,omitempty"`

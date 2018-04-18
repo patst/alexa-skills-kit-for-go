@@ -30,8 +30,8 @@ type Skill struct {
 	OnGameEngineEvent  func(*GameEngineInputHandlerEventRequest, *OutgoingResponse)
 }
 
-// GetSkillHandler provides a http.Handler to have the freedom to use any http framework.
-func (skill *Skill) GetSkillHandler() http.Handler {
+// GetHTTPSkillHandler provides a http.Handler to have the freedom to use any http framework.
+func (skill *Skill) GetHTTPSkillHandler() http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		isDev := string(r.URL.Query().Get("dev")) == "true"
 		//Validate request
@@ -81,13 +81,13 @@ func (skill *Skill) GetSkillHandler() http.Handler {
 func isRequestValid(requestEnvelope *RequestEnvelope, expectedAppID string, isDev bool, w http.ResponseWriter) bool {
 	// Check the timestamp
 	if !requestEnvelope.VerifyTimestamp() && !isDev {
-		HTTPError(w, "Request too old to continue (>30s).", "Bad Request", 400)
+		HTTPError(w, "Request too old to continue (>150s).", "Bad Request", 400)
 		return false
 	}
 
 	// Check the app id
 	if requestEnvelope.Context.System.Application.ApplicationID != expectedAppID {
-		HTTPError(w, "Alexa AppplicationId mismatch!", "Bad Request", 400)
+		HTTPError(w, "Alexa AppplicationID mismatch!", "Bad Request", 400)
 		return false
 	}
 	return true
@@ -162,8 +162,9 @@ func HTTPError(w http.ResponseWriter, logMsg string, err string, errCode int) {
 	if logMsg != "" {
 		log.Println(logMsg)
 	}
-
-	http.Error(w, err, errCode)
+	if w != nil {
+		http.Error(w, err, errCode)
+	}
 }
 
 func isValidAlexaCertificate(w http.ResponseWriter, r *http.Request, isDev bool) bool {

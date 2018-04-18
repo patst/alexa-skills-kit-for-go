@@ -11,7 +11,7 @@ func TestGameEngineInputEvent(t *testing.T) {
 	skill := Skill{
 		ApplicationID: "amzn1.echo-sdk-ams.app.000000-d0ed-0000-ad00-000000d00ebe",
 	}
-	skillHandler := skill.GetSkillHandler()
+	skillHandler := skill.GetHTTPSkillHandler()
 
 	skill.OnGameEngineEvent = func(request *GameEngineInputHandlerEventRequest, response *OutgoingResponse) {
 		assertEqual(t, "GameEngine.InputHandlerEvent", request.Type, "")
@@ -41,7 +41,7 @@ func TestRegisterForEvents(t *testing.T) {
 	skill := Skill{
 		ApplicationID: "amzn1.echo-sdk-ams.app.000000-d0ed-0000-ad00-000000d00ebe",
 	}
-	skillHandler := skill.GetSkillHandler()
+	skillHandler := skill.GetHTTPSkillHandler()
 
 	skill.OnLaunch = func(request *LaunchRequest, response *OutgoingResponse) {
 		response.Response.SetOutputSpeech("outputspeech")
