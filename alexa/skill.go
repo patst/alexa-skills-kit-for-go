@@ -80,7 +80,7 @@ func (skill *Skill) GetHTTPSkillHandler() http.Handler {
 
 func isRequestValid(requestEnvelope *RequestEnvelope, expectedAppID string, isDev bool, w http.ResponseWriter) bool {
 	// Check the timestamp
-	if !requestEnvelope.VerifyTimestamp() && !isDev {
+	if !requestEnvelope.verifyTimestamp() && !isDev {
 		HTTPError(w, "Request too old to continue (>150s).", "Bad Request", 400)
 		return false
 	}
@@ -96,7 +96,7 @@ func isRequestValid(requestEnvelope *RequestEnvelope, expectedAppID string, isDe
 func handleRequest(requestEnvelope *RequestEnvelope, skill *Skill) (*ResponseEnvelope, error) {
 	//Read the type for this request to do the correct routing
 	var commonRequest CommonRequest
-	err := requestEnvelope.GetTypedRequest(&commonRequest)
+	err := requestEnvelope.getTypedRequest(&commonRequest)
 	if err != nil {
 		return nil, err
 	}
@@ -113,42 +113,42 @@ func handleRequest(requestEnvelope *RequestEnvelope, skill *Skill) (*ResponseEnv
 			//Map to the correct type
 			var request LaunchRequest
 			// Create concrete types
-			requestEnvelope.GetTypedRequest(&request)
+			requestEnvelope.getTypedRequest(&request)
 			skill.OnLaunch(&request, response)
 		}
 	} else if requestType == "IntentRequest" {
 		if skill.OnIntent != nil {
 			var request IntentRequest
 			// Create concrete types
-			requestEnvelope.GetTypedRequest(&request)
+			requestEnvelope.getTypedRequest(&request)
 			skill.OnIntent(&request, response)
 		}
 	} else if requestType == "SessionEndedRequest" {
 		if skill.OnSessionEnded != nil {
 			var request SessionEndedRequest
 			// Create concrete types
-			requestEnvelope.GetTypedRequest(&request)
+			requestEnvelope.getTypedRequest(&request)
 			skill.OnSessionEnded(&request, response)
 		}
 	} else if strings.HasPrefix(requestType, "AudioPlayer.") {
 		if skill.OnAudioPlayerState != nil {
 			var request AudioPlayerRequest
 			// Create concrete types
-			requestEnvelope.GetTypedRequest(&request)
+			requestEnvelope.getTypedRequest(&request)
 			skill.OnAudioPlayerState(&request, response)
 		}
 	} else if strings.HasPrefix(requestType, "GameEngine.") {
 		if skill.OnGameEngineEvent != nil {
 			var request GameEngineInputHandlerEventRequest
 			// Create concrete types
-			requestEnvelope.GetTypedRequest(&request)
+			requestEnvelope.getTypedRequest(&request)
 			skill.OnGameEngineEvent(&request, response)
 		}
 	} else if requestType == "System.ExceptionEncountered" {
 		if skill.OnSystemException != nil {
 			var request SystemExceptionEncounteredRequest
 			// Create concrete types
-			requestEnvelope.GetTypedRequest(&request)
+			requestEnvelope.getTypedRequest(&request)
 			skill.OnSystemException(&request, response)
 		}
 	} else {
