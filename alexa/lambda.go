@@ -6,17 +6,17 @@ import (
 	"encoding/json"
 	"errors"
 	"log"
+
+	"github.com/aws/aws-lambda-go/lambdacontext"
 )
 
-type LambdaSkillHandler interface {
-	Invoke(ctx context.Context, event interface{}) (interface{}, error)
-}
-
+// LambdaHandler interface which a lambda handler must fulfil.
 type LambdaHandler func(ctx context.Context, event interface{}) (interface{}, error)
 
 // GetLambdaSkillHandler provides a handler which can be used in a lambda function.
 func (skill *Skill) GetLambdaSkillHandler() LambdaHandler {
 	return func(ctx context.Context, event interface{}) (interface{}, error) {
+		lc, _ := lambdacontext.FromContext(ctx)
 		bodyBytes, err := json.Marshal(event)
 
 		if err != nil {
@@ -32,7 +32,12 @@ func (skill *Skill) GetLambdaSkillHandler() LambdaHandler {
 			return nil, err
 		}
 
-		if !isRequestValid(requestEnvelope, skill.ApplicationID, false, nil) {
+		isDev := false
+		if lc != nil {
+			isDev = lc.ClientContext.Env["dev"] == "true"
+		}
+
+		if !isRequestValid(requestEnvelope, skill.ApplicationID, isDev, nil) {
 			return nil, errors.New("Request is invalid")
 		}
 

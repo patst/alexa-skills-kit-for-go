@@ -1,7 +1,7 @@
 package alexa
 
-// OutgoingResponse is the complete object returned for a alexa POST request.
-type OutgoingResponse struct {
+// ResponseEnvelope is the envelope for the object returned for a alexa POST request.
+type ResponseEnvelope struct {
 	Version           string                 `json:"version"`
 	SessionAttributes map[string]interface{} `json:"sessionAttributes,omitempty"`
 	Response          *Response              `json:"response,omitempty"`
@@ -45,12 +45,12 @@ type Card struct {
 	} `json:"image,omitempty"`
 }
 
-// NewOutgoingResponse creates a response skeletion for alexa responses
-func NewOutgoingResponse(sessionAttributes map[string]interface{}) *OutgoingResponse {
+// NewResponseEnvelope creates a response skeletion for alexa responses
+func NewResponseEnvelope(sessionAttributes map[string]interface{}) *ResponseEnvelope {
 	if sessionAttributes == nil {
 		sessionAttributes = make(map[string]interface{})
 	}
-	return &OutgoingResponse{
+	return &ResponseEnvelope{
 		Version:           "1.0",
 		Response:          &Response{},
 		SessionAttributes: sessionAttributes,

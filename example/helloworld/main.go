@@ -31,10 +31,11 @@ func main() {
 		ReadTimeout:  15 * time.Second,
 	}
 	log.Println("Starting webserver")
+	// If no NGINX proxy is used this must be ListenAndServeTLS because Alexa requires a HTTPS connection for all requests!
 	log.Fatal(srv.ListenAndServe())
 }
 
-func intentDispatchHandler(request *alexa.IntentRequest, response *alexa.OutgoingResponse) {
+func intentDispatchHandler(request *alexa.IntentRequest, response *alexa.ResponseEnvelope) {
 	switch request.Intent.Name {
 	case "HelloWorldIntent":
 		helloWorldIntentHandler(request, response)
@@ -50,32 +51,32 @@ func intentDispatchHandler(request *alexa.IntentRequest, response *alexa.Outgoin
 }
 
 // HelloWorldIntent
-func helloWorldIntentHandler(request *alexa.IntentRequest, outgoingResponse *alexa.OutgoingResponse) {
+func helloWorldIntentHandler(request *alexa.IntentRequest, responseEnvelope *alexa.ResponseEnvelope) {
 	speechText := "Hello world"
-	outgoingResponse.Response.SetOutputSpeech(speechText)
-	outgoingResponse.Response.SimpleCard("HelloWorld", speechText)
+	responseEnvelope.Response.SetOutputSpeech(speechText)
+	responseEnvelope.Response.SimpleCard("HelloWorld", speechText)
 }
 
-func cancelAndStopIntentHandler(request *alexa.IntentRequest, outgoingResponse *alexa.OutgoingResponse) {
+func cancelAndStopIntentHandler(request *alexa.IntentRequest, responseEnvelope *alexa.ResponseEnvelope) {
 	speechText := "Goodbye"
-	outgoingResponse.Response.SetOutputSpeech(speechText)
-	outgoingResponse.Response.SimpleCard("HelloWorld", speechText)
+	responseEnvelope.Response.SetOutputSpeech(speechText)
+	responseEnvelope.Response.SimpleCard("HelloWorld", speechText)
 }
 
-func helpIntentHandler(request *alexa.IntentRequest, outgoingResponse *alexa.OutgoingResponse) {
+func helpIntentHandler(request *alexa.IntentRequest, responseEnvelope *alexa.ResponseEnvelope) {
 	speechText := "You can say hello to me!"
-	outgoingResponse.Response.SetOutputSpeech(speechText)
-	outgoingResponse.Response.SetReprompt(speechText)
-	outgoingResponse.Response.SimpleCard("HelloWorld", speechText)
+	responseEnvelope.Response.SetOutputSpeech(speechText)
+	responseEnvelope.Response.SetReprompt(speechText)
+	responseEnvelope.Response.SimpleCard("HelloWorld", speechText)
 }
 
-func launchRequestHandler(request *alexa.LaunchRequest, outgoingResponse *alexa.OutgoingResponse) {
+func launchRequestHandler(request *alexa.LaunchRequest, responseEnvelope *alexa.ResponseEnvelope) {
 	speechText := "Welcome to the Alexa Skills Kit, you can say hello"
-	outgoingResponse.Response.SetOutputSpeech(speechText)
-	outgoingResponse.Response.SetReprompt(speechText)
-	outgoingResponse.Response.SimpleCard("HelloWorld", speechText)
+	responseEnvelope.Response.SetOutputSpeech(speechText)
+	responseEnvelope.Response.SetReprompt(speechText)
+	responseEnvelope.Response.SimpleCard("HelloWorld", speechText)
 }
 
-func sessionEndedRequestHandler(request *alexa.SessionEndedRequest, outgoingResponse *alexa.OutgoingResponse) {
+func sessionEndedRequestHandler(request *alexa.SessionEndedRequest, responseEnvelope *alexa.ResponseEnvelope) {
 	// cleanup stuff
 }

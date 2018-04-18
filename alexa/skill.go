@@ -22,12 +22,12 @@ import (
 // Skill configures the different Handlers for skill execution.
 type Skill struct {
 	ApplicationID      string
-	OnLaunch           func(*LaunchRequest, *OutgoingResponse)
-	OnIntent           func(*IntentRequest, *OutgoingResponse)
-	OnSessionEnded     func(*SessionEndedRequest, *OutgoingResponse)
-	OnAudioPlayerState func(*AudioPlayerRequest, *OutgoingResponse)
-	OnSystemException  func(*SystemExceptionEncounteredRequest, *OutgoingResponse)
-	OnGameEngineEvent  func(*GameEngineInputHandlerEventRequest, *OutgoingResponse)
+	OnLaunch           func(*LaunchRequest, *ResponseEnvelope)
+	OnIntent           func(*IntentRequest, *ResponseEnvelope)
+	OnSessionEnded     func(*SessionEndedRequest, *ResponseEnvelope)
+	OnAudioPlayerState func(*AudioPlayerRequest, *ResponseEnvelope)
+	OnSystemException  func(*SystemExceptionEncounteredRequest, *ResponseEnvelope)
+	OnGameEngineEvent  func(*GameEngineInputHandlerEventRequest, *ResponseEnvelope)
 }
 
 // GetHTTPSkillHandler provides a http.Handler to have the freedom to use any http framework.
@@ -93,7 +93,7 @@ func isRequestValid(requestEnvelope *RequestEnvelope, expectedAppID string, isDe
 	return true
 }
 
-func handleRequest(requestEnvelope *RequestEnvelope, skill *Skill) (*OutgoingResponse, error) {
+func handleRequest(requestEnvelope *RequestEnvelope, skill *Skill) (*ResponseEnvelope, error) {
 	//Read the type for this request to do the correct routing
 	var commonRequest CommonRequest
 	err := requestEnvelope.GetTypedRequest(&commonRequest)
@@ -104,7 +104,7 @@ func handleRequest(requestEnvelope *RequestEnvelope, skill *Skill) (*OutgoingRes
 	requestType := commonRequest.Type
 
 	// Create response and map the session attributes from the request
-	response := NewOutgoingResponse(requestEnvelope.Session.Attributes)
+	response := NewResponseEnvelope(requestEnvelope.Session.Attributes)
 
 	// Request handling
 	if requestType == "LaunchRequest" {

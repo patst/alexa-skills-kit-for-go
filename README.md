@@ -1,4 +1,4 @@
-## `alexa-skills-kit-for-go`: Create Amazon Alexa Go skills 
+## `alexa-skills-kit-for-go`: Create Amazon Alexa Go skills
 
 [![Go Report Card](https://goreportcard.com/badge/patst/alexa-skills-kit-for-go)](https://goreportcard.com/report/patst/alexa-skills-kit-for-go) [![Build Status](https://travis-ci.org/patst/alexa-skills-kit-for-go.svg?branch=master)](https://travis-ci.org/patst/alexa-skills-kit-for-go) [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/patst/alexa-skills-kit-for-go/blob/master/LICENSE) [![GoDoc](https://godoc.org/github.com/patst/alexa-skills-kit-for-go?status.svg)](https://godoc.org/github.com/patst/alexa-skills-kit-for-go)
 
@@ -20,6 +20,13 @@ Not supported so far:
 *Asynchronous Directive Service
 
 There is a excellent API description what attributes must be included in responses and how to use the different interfaces in the [AWS Request and Response JSON reference](https://developer.amazon.com/docs/custom-skills/request-and-response-json-reference.html)
+
+## Functionality
+
+Amazon has an exhaustive description of the Alexa API including all the request and response objects. This library mapped the objects to structs and provides a way to interact with the Alexa Voice Service.
+
+The connection is either via Web Service for self hosted custom skills or AWS Lambda Function for skill hosted at the AWS Lambda Function service.
+The second option is a easier deployment way because a developer has not to think about valid HTTPS certificates.
 
 ## Examples
 
