@@ -10,7 +10,8 @@ import (
 
 func TestGameEngineInputEvent(t *testing.T) {
 	skill := Skill{
-		ApplicationID: "amzn1.echo-sdk-ams.app.000000-d0ed-0000-ad00-000000d00ebe",
+		ApplicationID:  "amzn1.echo-sdk-ams.app.000000-d0ed-0000-ad00-000000d00ebe",
+		SkipValidation: true,
 	}
 	skillHandler := skill.GetHTTPSkillHandler()
 
@@ -29,7 +30,7 @@ func TestGameEngineInputEvent(t *testing.T) {
 		t.Error("Error reading input file", err)
 	}
 
-	httpRequest := httptest.NewRequest("POST", "/url?dev=true", launchRequestReader)
+	httpRequest := httptest.NewRequest("POST", "/", launchRequestReader)
 	responseWriter := httptest.NewRecorder()
 	skillHandler.ServeHTTP(responseWriter, httpRequest)
 	if responseWriter.Code != http.StatusOK {
@@ -40,7 +41,8 @@ func TestGameEngineInputEvent(t *testing.T) {
 
 func TestRegisterForEvents(t *testing.T) {
 	skill := Skill{
-		ApplicationID: "amzn1.echo-sdk-ams.app.000000-d0ed-0000-ad00-000000d00ebe",
+		ApplicationID:  "amzn1.echo-sdk-ams.app.000000-d0ed-0000-ad00-000000d00ebe",
+		SkipValidation: true,
 	}
 	skillHandler := skill.GetHTTPSkillHandler()
 
@@ -99,7 +101,7 @@ func TestRegisterForEvents(t *testing.T) {
 		t.Error("Error reading input file", err)
 	}
 
-	httpRequest := httptest.NewRequest("POST", "/url?dev=true", launchRequestReader)
+	httpRequest := httptest.NewRequest("POST", "/", launchRequestReader)
 	responseWriter := httptest.NewRecorder()
 	skillHandler.ServeHTTP(responseWriter, httpRequest)
 	if responseWriter.Code != http.StatusOK {

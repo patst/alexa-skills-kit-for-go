@@ -25,7 +25,7 @@ func TestLambdaCall(t *testing.T) {
 	}
 
 	var event map[string]interface{}
-	err = json.NewDecoder(launchRequestReader).Decode(&event)
+	json.NewDecoder(launchRequestReader).Decode(&event)
 
 	// Set a recent timestamp
 	event["request"].(map[string]interface{})["timestamp"] = time.Now().Format("2006-01-02T15:04:05Z")

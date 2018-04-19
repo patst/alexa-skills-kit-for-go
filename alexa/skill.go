@@ -1,27 +1,17 @@
 package alexa
 
 import (
-	"bytes"
-	"crypto"
-	"crypto/rsa"
-	"crypto/sha1"
-	"crypto/x509"
-	"encoding/base64"
-	"encoding/json"
-	"encoding/pem"
 	"errors"
-	"io"
-	"io/ioutil"
-	"log"
-	"net/http"
-	"net/url"
 	"strings"
-	"time"
 )
 
 // Skill configures the different Handlers for skill execution.
 type Skill struct {
-	ApplicationID      string
+	ApplicationID string
+	// SkipValidation skips any request validation (TEST ONLY!)
+	SkipValidation bool
+	// Verbose enables request and response logging
+	Verbose            bool
 	OnLaunch           func(*LaunchRequest, *ResponseEnvelope)
 	OnIntent           func(*IntentRequest, *ResponseEnvelope)
 	OnSessionEnded     func(*SessionEndedRequest, *ResponseEnvelope)
@@ -30,70 +20,7 @@ type Skill struct {
 	OnGameEngineEvent  func(*GameEngineInputHandlerEventRequest, *ResponseEnvelope)
 }
 
-// GetHTTPSkillHandler provides a http.Handler to have the freedom to use any http framework.
-func (skill *Skill) GetHTTPSkillHandler() http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		isDev := string(r.URL.Query().Get("dev")) == "true"
-		//Validate request
-		if !isValidAlexaCertificate(w, r, isDev) {
-			return
-		}
-
-		// unmarshall body request
-		bodyBytes, err := ioutil.ReadAll(r.Body)
-		if err != nil {
-			HTTPError(w, err.Error(), "Error reading request body. Bad Request", 400)
-			return
-		}
-		log.Println("--> Request: ", string(bodyBytes))
-
-		var requestEnvelope *RequestEnvelope
-		err = json.NewDecoder(bytes.NewReader(bodyBytes)).Decode(&requestEnvelope)
-
-		if err != nil {
-			HTTPError(w, err.Error(), "Bad Request", 400)
-			return
-		}
-
-		if !isRequestValid(requestEnvelope, skill.ApplicationID, isDev, w) {
-			return
-		}
-
-		response, err := handleRequest(requestEnvelope, skill)
-
-		if err != nil {
-			HTTPError(w, err.Error(), "Bad Request", 400)
-			return
-		}
-
-		json, err := json.Marshal(response)
-		if err != nil {
-			log.Fatal("Error serializing response", err)
-			http.Error(w, "unexpected exception.", http.StatusInternalServerError)
-		}
-
-		log.Println("--> Response: ", string(json))
-		w.Header().Set("Content-Type", "application/json;charset=UTF-8")
-		w.Write(json)
-	})
-}
-
-func isRequestValid(requestEnvelope *RequestEnvelope, expectedAppID string, isDev bool, w http.ResponseWriter) bool {
-	// Check the timestamp
-	if !requestEnvelope.verifyTimestamp() && !isDev {
-		HTTPError(w, "Request too old to continue (>150s).", "Bad Request", 400)
-		return false
-	}
-
-	// Check the app id
-	if requestEnvelope.Context.System.Application.ApplicationID != expectedAppID {
-		HTTPError(w, "Alexa AppplicationID mismatch!", "Bad Request", 400)
-		return false
-	}
-	return true
-}
-
-func handleRequest(requestEnvelope *RequestEnvelope, skill *Skill) (*ResponseEnvelope, error) {
+func (requestEnvelope *RequestEnvelope) handleRequest(skill *Skill) (*ResponseEnvelope, error) {
 	//Read the type for this request to do the correct routing
 	var commonRequest CommonRequest
 	err := requestEnvelope.getTypedRequest(&commonRequest)
@@ -155,121 +82,4 @@ func handleRequest(requestEnvelope *RequestEnvelope, skill *Skill) (*ResponseEnv
 		return nil, errors.New("Invalid request")
 	}
 	return response, nil
-}
-
-// HTTPError logs the logMsg and sets the given errCode
-func HTTPError(w http.ResponseWriter, logMsg string, err string, errCode int) {
-	if logMsg != "" {
-		log.Println(logMsg)
-	}
-	if w != nil {
-		http.Error(w, err, errCode)
-	}
-}
-
-func isValidAlexaCertificate(w http.ResponseWriter, r *http.Request, isDev bool) bool {
-	if isDev {
-		return true
-	}
-	certURL := r.Header.Get("SignatureCertChainUrl")
-
-	// Verify certificate URL
-	if !verifyCertURL(certURL) {
-		HTTPError(w, "Invalid cert URL: "+certURL, "Not Authorized", 401)
-		return false
-	}
-
-	// Fetch certificate data
-	certContents, err := readCert(certURL)
-	if err != nil {
-		HTTPError(w, err.Error(), "Not Authorized", 401)
-		return false
-	}
-
-	// Decode certificate data
-	block, _ := pem.Decode(certContents)
-	if block == nil {
-		HTTPError(w, "Failed to parse certificate PEM.", "Not Authorized", 401)
-		return false
-	}
-
-	cert, err := x509.ParseCertificate(block.Bytes)
-	if err != nil {
-		HTTPError(w, err.Error(), "Not Authorized", 401)
-		return false
-	}
-
-	// Check the certificate date
-	if time.Now().Unix() < cert.NotBefore.Unix() || time.Now().Unix() > cert.NotAfter.Unix() {
-		HTTPError(w, "Amazon certificate expired.", "Not Authorized", 401)
-		return false
-	}
-
-	// Check the certificate alternate names
-	foundName := false
-	for _, altName := range cert.Subject.Names {
-		if altName.Value == "echo-api.amazon.com" {
-			foundName = true
-		}
-	}
-
-	if !foundName {
-		HTTPError(w, "Amazon certificate invalid.", "Not Authorized", 401)
-		return false
-	}
-
-	// Verify the key
-	publicKey := cert.PublicKey
-	encryptedSig, _ := base64.StdEncoding.DecodeString(r.Header.Get("Signature"))
-
-	// Make the request body SHA1 and verify the request with the public key
-	var bodyBuf bytes.Buffer
-	hash := sha1.New()
-	_, err = io.Copy(hash, io.TeeReader(r.Body, &bodyBuf))
-	if err != nil {
-		HTTPError(w, err.Error(), "Internal Error", 500)
-		return false
-	}
-	//log.Println(bodyBuf.String())
-	r.Body = ioutil.NopCloser(&bodyBuf)
-
-	err = rsa.VerifyPKCS1v15(publicKey.(*rsa.PublicKey), crypto.SHA1, hash.Sum(nil), encryptedSig)
-	if err != nil {
-		HTTPError(w, "Signature match failed.", "Not Authorized", 401)
-		return false
-	}
-
-	return true
-}
-
-func readCert(certURL string) ([]byte, error) {
-	cert, err := http.Get(certURL)
-	if err != nil {
-		return nil, errors.New("Could not download Amazon cert file")
-	}
-	defer cert.Body.Close()
-	certContents, err := ioutil.ReadAll(cert.Body)
-	if err != nil {
-		return nil, errors.New("Could not read Amazon cert file")
-	}
-
-	return certContents, nil
-}
-
-func verifyCertURL(path string) bool {
-	link, _ := url.Parse(path)
-
-	if link.Scheme != "https" {
-		return false
-	}
-
-	if link.Host != "s3.amazonaws.com" && link.Host != "s3.amazonaws.com:443" {
-		return false
-	}
-
-	if !strings.HasPrefix(link.Path, "/echo.api/") {
-		return false
-	}
-
-	return true
 }

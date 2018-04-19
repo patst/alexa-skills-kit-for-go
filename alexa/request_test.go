@@ -24,7 +24,7 @@ func TestLaunchRequest(t *testing.T) {
 		assert.Equal(t, "LaunchRequest", request.Type, "Type does not match")
 		response.Response.SetOutputSpeech("output")
 	}
-	response, err := handleRequest(&r, &skill)
+	response, err := r.handleRequest(&skill)
 
 	assert.Equal(t, "<speak> output </speak>", response.Response.OutputSpeech.Ssml, "OutputSpeech does not match")
 	assert.Equal(t, "SSML", response.Response.OutputSpeech.Type, "OutputSpeech Type does not match")
@@ -52,7 +52,7 @@ func TestIntentRequest(t *testing.T) {
 		assert.Equal(t, "NONE", request.Intent.Slots["ZodiacSign"].ConfirmationStatus, "ConfirmationStatus does not match")
 
 	}
-	_, err = handleRequest(&r, &skill)
+	_, err = r.handleRequest(&skill)
 
 	if err != nil {
 		t.Fatal("Error occurred", err)
@@ -72,7 +72,7 @@ func TestSessionEndedRequest(t *testing.T) {
 		assert.Equal(t, "SessionEndedRequest", request.Type, "Type does not match")
 		assert.Equal(t, "USER_INITIATED", request.Reason, "Reason does not match")
 	}
-	_, err = handleRequest(&r, &skill)
+	_, err = r.handleRequest(&skill)
 
 	if err != nil {
 		t.Fatal("Error occurred", err)
@@ -98,7 +98,7 @@ func TestSessionAttributes(t *testing.T) {
 		// Add an session attribute
 		request.Session.Attributes["newProp"] = "newPropValue"
 	}
-	response, err := handleRequest(&r, &skill)
+	response, err := r.handleRequest(&skill)
 
 	assert.Equal(t, "newPropValue", response.SessionAttributes["newProp"], "Session attribute newProp does not match")
 
@@ -122,7 +122,7 @@ func TestContextAttributes(t *testing.T) {
 		assert.Equal(t, 0, request.Context.AudioPlayer.OffsetInMilliseconds, "")
 		assert.Equal(t, "IDLE", request.Context.AudioPlayer.PlayerActivity, "")
 	}
-	_, err = handleRequest(&r, &skill)
+	_, err = r.handleRequest(&skill)
 
 	if err != nil {
 		t.Fatal("Error occurred", err)
