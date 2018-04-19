@@ -46,7 +46,7 @@ type Card struct {
 }
 
 // NewResponseEnvelope creates a response skeletion for alexa responses
-func NewResponseEnvelope(sessionAttributes map[string]interface{}) *ResponseEnvelope {
+func newResponseEnvelope(sessionAttributes map[string]interface{}) *ResponseEnvelope {
 	if sessionAttributes == nil {
 		sessionAttributes = make(map[string]interface{})
 	}
@@ -57,11 +57,11 @@ func NewResponseEnvelope(sessionAttributes map[string]interface{}) *ResponseEnve
 	}
 }
 
-// SetOutputSpeech creates a PlainText output speech object for the response. Any present output speech is overwritten.
+// SetOutputSpeech creates a SSML output speech object for the response. Any present output speech is overwritten.
 func (response *Response) SetOutputSpeech(text string) *Response {
 	response.OutputSpeech = &OutputSpeech{
-		Type: "PlainText",
-		Text: text,
+		Type: "SSML",
+		Ssml: "<speak> " + text + " </speak>",
 	}
 	return response
 }
@@ -77,12 +77,17 @@ func (response *Response) SetReprompt(text string) *Response {
 	return response
 }
 
-// SimpleCard creates a simple card for the response. Any present card is overwritten.
-func (response *Response) SimpleCard(title string, content string) *Response {
+// SetSimpleCard creates a simple card for the response. Any present card is overwritten.
+func (response *Response) SetSimpleCard(title string, content string) *Response {
 	response.Card = &Card{
 		Type:    "Simple",
 		Title:   title,
 		Content: content,
 	}
 	return response
+}
+
+// AddDirective adds a directive to the slice of existing directives for a response.
+func (response *Response) AddDirective(directive interface{}) {
+	response.Directives = append(response.Directives, directive)
 }

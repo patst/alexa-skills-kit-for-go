@@ -14,7 +14,7 @@ func TestLambdaCall(t *testing.T) {
 	skill := Skill{
 		ApplicationID: "amzn1.echo-sdk-ams.app.000000-d0ed-0000-ad00-000000d00ebe",
 		OnLaunch: func(req *LaunchRequest, res *ResponseEnvelope) {
-			res.Response.SimpleCard("title", "test")
+			res.Response.SetSimpleCard("title", "test")
 		},
 	}
 	skillHandler := skill.GetLambdaSkillHandler()
@@ -25,7 +25,7 @@ func TestLambdaCall(t *testing.T) {
 	}
 
 	var event map[string]interface{}
-	err = json.NewDecoder(launchRequestReader).Decode(&event)
+	json.NewDecoder(launchRequestReader).Decode(&event)
 
 	// Set a recent timestamp
 	event["request"].(map[string]interface{})["timestamp"] = time.Now().Format("2006-01-02T15:04:05Z")

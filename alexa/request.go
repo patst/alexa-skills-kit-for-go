@@ -94,13 +94,13 @@ type IntentRequest struct {
 
 // Intent provided in Intent requests
 type Intent struct {
-	Name               string          `json:"name,omitempty"`
-	Slots              map[string]Slot `json:"slots,omitempty"`
-	ConfirmationStatus string          `json:"confirmationStatus,omitempty"`
+	Name               string                `json:"name,omitempty"`
+	Slots              map[string]IntentSlot `json:"slots,omitempty"`
+	ConfirmationStatus string                `json:"confirmationStatus,omitempty"`
 }
 
-// Slot is provided in Intents
-type Slot struct {
+// IntentSlot is provided in Intents
+type IntentSlot struct {
 	Name               string      `json:"name"`
 	Value              string      `json:"value"`
 	ConfirmationStatus string      `json:"confirmationStatus,omitempty"`
@@ -121,7 +121,7 @@ type AudioPlayerRequest struct {
 }
 
 // GetTypedRequest provides the request object mapped to the given struct
-func (requestEnvelope *RequestEnvelope) GetTypedRequest(requestObj interface{}) error {
+func (requestEnvelope *RequestEnvelope) getTypedRequest(requestObj interface{}) error {
 	data, _ := json.Marshal(requestEnvelope.Request)
 	requestObj.(requestEnvelopeDataProvider).setContext(&requestEnvelope.Context)
 	requestObj.(requestEnvelopeDataProvider).setSession(&requestEnvelope.Session)
@@ -136,7 +136,7 @@ func (cr *CommonRequest) setSession(session *Session) {
 }
 
 // VerifyTimestamp checks if the the timestamp is not older than 30 seconds
-func (requestEnvelope *RequestEnvelope) VerifyTimestamp() bool {
+func (requestEnvelope *RequestEnvelope) verifyTimestamp() bool {
 	timestampStr := requestEnvelope.Request.(map[string]interface{})["timestamp"].(string)
 	requestTimestamp, err := time.Parse("2006-01-02T15:04:05Z", timestampStr)
 	if err != nil {

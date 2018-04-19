@@ -1,10 +1,15 @@
 package alexa
 
 import (
+	"bytes"
+	"encoding/json"
+	"github.com/stretchr/testify/assert"
+	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"os"
 	"testing"
+	"time"
 )
 
 func TestCertificateValidation(t *testing.T) {
@@ -18,7 +23,8 @@ func TestCertificateValidation(t *testing.T) {
 		t.Error("Error reading input file", err)
 	}
 
-	httpRequest := httptest.NewRequest("POST", "/url?dev=true", launchRequestReader)
+	skill.SkipValidation = true
+	httpRequest := httptest.NewRequest("POST", "/", launchRequestReader)
 	responseWriter := httptest.NewRecorder()
 	skillHandler.ServeHTTP(responseWriter, httpRequest)
 	if responseWriter.Code != http.StatusOK {
@@ -27,7 +33,8 @@ func TestCertificateValidation(t *testing.T) {
 	}
 
 	// Testing without dev mode must throw an error due to a invalid certificate
-	httpRequest = httptest.NewRequest("POST", "/url?dev=false", launchRequestReader)
+	skill.SkipValidation = false
+	httpRequest = httptest.NewRequest("POST", "/", launchRequestReader)
 	responseWriter = httptest.NewRecorder()
 	skillHandler.ServeHTTP(responseWriter, httpRequest)
 	if responseWriter.Code != http.StatusUnauthorized {
@@ -37,21 +44,18 @@ func TestCertificateValidation(t *testing.T) {
 }
 
 func TestWrongApplicationId(t *testing.T) {
-	skill := Skill{
-		ApplicationID: "wrong app id",
-	}
-	skillHandler := skill.GetHTTPSkillHandler()
+	wrongAppID := "wrong app id"
 
 	launchRequestReader, err := os.Open("../resources/launch_request.json")
 	if err != nil {
 		t.Error("Error reading input file", err)
 	}
 
-	httpRequest := httptest.NewRequest("POST", "/url?dev=true", launchRequestReader)
-	responseWriter := httptest.NewRecorder()
-	skillHandler.ServeHTTP(responseWriter, httpRequest)
-	if responseWriter.Code != http.StatusBadRequest {
-		t.Errorf("handler returned wrong status code: got %v want %v",
-			responseWriter.Code, http.StatusBadRequest)
-	}
+	bodyBytes, _ := ioutil.ReadAll(launchRequestReader)
+	var reqEnvelope RequestEnvelope
+	json.NewDecoder(bytes.NewReader(bodyBytes)).Decode(&reqEnvelope)
+
+	reqEnvelope.Request.(map[string]interface{})["timestamp"] = time.Now().Format("2006-01-02T15:04:05Z")
+	err = reqEnvelope.isRequestValid(wrongAppID)
+	assert.Error(t, err)
 }

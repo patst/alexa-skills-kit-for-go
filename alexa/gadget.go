@@ -1,5 +1,10 @@
 package alexa
 
+import (
+	"fmt"
+	"strconv"
+)
+
 // GadgetControllerSetLightDirective sends a command to animate the LEDs of connected Echo Buttons. The following example shows the general form of the directive.
 type GadgetControllerSetLightDirective struct {
 	Type          string           `json:"type,omitempty"`
@@ -29,7 +34,7 @@ type GadgetParameters struct {
 // GadgetAnimation contains a sequence of instructions to be performed in a specific order, along with the number of times to play the overall animation.
 type GadgetAnimation struct {
 	Repeat       int                   `json:"repeat"`
-	TargetLights []int                 `json:"targetLights"`
+	TargetLights []string              `json:"targetLights"`
 	Sequence     []GadgetAnimationStep `json:"sequence"`
 }
 
@@ -50,4 +55,9 @@ type SystemExceptionEncounteredRequest struct {
 	Cause struct {
 		RequestID string `json:"requestId"`
 	} `json:"cause"`
+}
+
+// RgbToHex converts single rgb values to a hex string representation.
+func RgbToHex(r, g, b int) string {
+	return fmt.Sprintf("%02s%02s%02s", strconv.FormatInt(int64(r), 16), strconv.FormatInt(int64(g), 16), strconv.FormatInt(int64(b), 16))
 }

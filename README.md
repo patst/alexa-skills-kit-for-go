@@ -57,6 +57,12 @@ If you are using windows like I am it may be tricky to build the zip file with t
 
 The Lambda Function can be deployed using the AWS CLI, AWS CloudFormation or the AWS Web console. For details see [deploying Lambda Functions](https://docs.aws.amazon.com/lambda/latest/dg/deploying-lambda-apps.html).
 
+### Hello buttons lambda
+
+Example how to use the new Echo Gadget Buttons. The example is converted from the Amazon NodeJS [Hello buttons tutorial](https://github.com/alexa/skill-sample-nodejs-buttons-hellobuttons).
+
+The example deploys as a lambda function. The necessary steps to create the skill are described in the above tutorial.
+
 ## Next Steps
 
 * Get the Amazon NodeJS hello buttons example working

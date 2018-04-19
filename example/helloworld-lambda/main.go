@@ -40,27 +40,27 @@ func intentDispatchHandler(request *alexa.IntentRequest, response *alexa.Respons
 func helloWorldIntentHandler(request *alexa.IntentRequest, responseEnvelope *alexa.ResponseEnvelope) {
 	speechText := "Hello world"
 	responseEnvelope.Response.SetOutputSpeech(speechText)
-	responseEnvelope.Response.SimpleCard("HelloWorld", speechText)
+	responseEnvelope.Response.SetSimpleCard("HelloWorld", speechText)
 }
 
 func cancelAndStopIntentHandler(request *alexa.IntentRequest, responseEnvelope *alexa.ResponseEnvelope) {
 	speechText := "Goodbye"
 	responseEnvelope.Response.SetOutputSpeech(speechText)
-	responseEnvelope.Response.SimpleCard("HelloWorld", speechText)
+	responseEnvelope.Response.SetSimpleCard("HelloWorld", speechText)
 }
 
 func helpIntentHandler(request *alexa.IntentRequest, responseEnvelope *alexa.ResponseEnvelope) {
 	speechText := "You can say hello to me!"
 	responseEnvelope.Response.SetOutputSpeech(speechText)
 	responseEnvelope.Response.SetReprompt(speechText)
-	responseEnvelope.Response.SimpleCard("HelloWorld", speechText)
+	responseEnvelope.Response.SetSimpleCard("HelloWorld", speechText)
 }
 
 func launchRequestHandler(request *alexa.LaunchRequest, responseEnvelope *alexa.ResponseEnvelope) {
 	speechText := "Welcome to the Alexa Skills Kit, you can say hello"
 	responseEnvelope.Response.SetOutputSpeech(speechText)
 	responseEnvelope.Response.SetReprompt(speechText)
-	responseEnvelope.Response.SimpleCard("HelloWorld", speechText)
+	responseEnvelope.Response.SetSimpleCard("HelloWorld", speechText)
 }
 
 func sessionEndedRequestHandler(request *alexa.SessionEndedRequest, responseEnvelope *alexa.ResponseEnvelope) {
