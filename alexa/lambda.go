@@ -30,9 +30,10 @@ func (skill *Skill) GetLambdaSkillHandler() LambdaHandler {
 		if err != nil {
 			return nil, err
 		}
-
-		if err = requestEnvelope.isRequestValid(skill.ApplicationID); err != nil {
-			return nil, errors.New("Request is invalid")
+		if !skill.SkipValidation {
+			if err = requestEnvelope.isRequestValid(skill.ApplicationID); err != nil {
+				return nil, errors.New("Request is invalid")
+			}
 		}
 
 		response, err := requestEnvelope.handleRequest(skill)
