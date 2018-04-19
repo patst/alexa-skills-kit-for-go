@@ -2,12 +2,12 @@ package alexa
 
 // GameEngineStartInputDirective directive to start the game engine.
 type GameEngineStartInputDirective struct {
-	Type                 string                                 `json:"type,omitempty"`
-	Timeout              int                                    `json:"timeout"`
-	MaximumHistoryLength int                                    `json:"maximumHistoryLength,omitempty"`
-	Proxies              []interface{}                          `json:"proxies,omitempty"`
-	Recognizers          map[string]interface{}                 `json:"recognizers"`
-	Events               map[string]GameEngineRegistrationEvent `json:"events"`
+	Type                 string                                  `json:"type,omitempty"`
+	Timeout              int                                     `json:"timeout"`
+	MaximumHistoryLength int                                     `json:"maximumHistoryLength,omitempty"`
+	Proxies              []interface{}                           `json:"proxies,omitempty"`
+	Recognizers          map[string]interface{}                  `json:"recognizers"`
+	Events               map[string]*GameEngineRegistrationEvent `json:"events"`
 }
 
 // GameEngineStopInputHandlerDirective stops Echo Button events from being sent to your skill.
@@ -129,15 +129,15 @@ func (sid *GameEngineStartInputDirective) AddDeviationRecognizer(name string, re
 
 // AddEvent adds a GameEngine Event registration to the directive.
 func (sid *GameEngineStartInputDirective) AddEvent(name string, shouldEndInputHandler bool, meetsRecognizers []string) *GameEngineRegistrationEvent {
-	event := GameEngineRegistrationEvent{
+	event := &GameEngineRegistrationEvent{
 		Meets: meetsRecognizers,
 		ShouldEndInputHandler: shouldEndInputHandler,
 	}
 	if sid.Events == nil {
-		sid.Events = make(map[string]GameEngineRegistrationEvent)
+		sid.Events = make(map[string]*GameEngineRegistrationEvent)
 	}
 	sid.Events[name] = event
-	return &event
+	return event
 }
 
 // AddProgressRecognizer adds a recognizer with the given name and returns the reference. The recognizer is true when all of the specified events have occurred in the specified order.
