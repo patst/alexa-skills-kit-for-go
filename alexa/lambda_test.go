@@ -14,7 +14,7 @@ func TestLambdaCall(t *testing.T) {
 	skill := Skill{
 		ApplicationID: "amzn1.echo-sdk-ams.app.000000-d0ed-0000-ad00-000000d00ebe",
 		OnLaunch: func(req *LaunchRequest, res *ResponseEnvelope) {
-			res.Response.SimpleCard("title", "test")
+			res.Response.SetSimpleCard("title", "test")
 		},
 	}
 	skillHandler := skill.GetLambdaSkillHandler()

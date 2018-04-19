@@ -49,50 +49,29 @@ func TestRegisterForEvents(t *testing.T) {
 	skill.OnLaunch = func(request *LaunchRequest, response *ResponseEnvelope) {
 		response.Response.SetOutputSpeech("outputspeech")
 		response.Response.SetReprompt("reprompt")
-		response.Response.SimpleCard("TestCard", "TestCardText")
+		response.Response.SetSimpleCard("TestCard", "TestCardText")
 
-		directive := NewGameEngineStartInputDirective()
-		directive.Timeout = 30000
-		directive.Recognizers = map[string]interface{}{
-			"button_down_recognizer": GameEnginePatternRecognizer{
-				Type:   "match",
-				Fuzzy:  false,
-				Anchor: "end",
-				Pattern: []GameEnginePattern{
-					{
-						Action: "down",
-					},
-				},
-			},
-			"button_up_recognizer": GameEnginePatternRecognizer{
-				Type:   "match",
-				Fuzzy:  false,
-				Anchor: "end",
-				Pattern: []GameEnginePattern{
-					{
-						Action: "up",
-					},
-				},
-			},
-		}
-		directive.Events = map[string]GameEngineRegistrationEvent{
-			"button_down_event": {
-				Meets:                 []string{"button_down_recognizer"},
-				Reports:               "matches",
-				ShouldEndInputHandler: false,
-			},
-			"button_up_event": {
-				Meets:                 []string{"button_up_recognizer"},
-				Reports:               "matches",
-				ShouldEndInputHandler: false,
-			},
-			"timeout": {
-				Meets:                 []string{"timed out"},
-				Reports:               "history",
-				ShouldEndInputHandler: true,
-			},
-		}
-		response.Response.Directives = append(response.Response.Directives, directive)
+		directive := NewGameEngineStartInputDirective(30000)
+		buttonDownRecognizer := directive.AddPatternRecognizer("button_down_recognizer")
+		buttonDownRecognizer.Fuzzy = false
+		buttonDownRecognizer.Anchor = "end"
+		buttonDownRecognizer.AddPattern(nil, nil, "down")
+
+		buttonUpRecognizer := directive.AddPatternRecognizer("button_up_recognizer")
+		buttonUpRecognizer.Fuzzy = false
+		buttonUpRecognizer.Anchor = "end"
+		buttonUpRecognizer.AddPattern(nil, nil, "up")
+
+		buttonDownEvent := directive.AddEvent("button_down_event", false, []string{"button_down_recognizer"})
+		buttonDownEvent.Reports = "matches"
+
+		buttonUpEvent := directive.AddEvent("button_up_event", false, []string{"button_up_recognizer"})
+		buttonUpEvent.Reports = "matches"
+
+		timeoutEvent := directive.AddEvent("timeout", true, []string{"timed out"})
+		timeoutEvent.Reports = "history"
+
+		response.Response.AddDirective(directive)
 		response.Response.ShouldEndSession = false
 
 	}

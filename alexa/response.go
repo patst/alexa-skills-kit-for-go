@@ -46,7 +46,7 @@ type Card struct {
 }
 
 // NewResponseEnvelope creates a response skeletion for alexa responses
-func NewResponseEnvelope(sessionAttributes map[string]interface{}) *ResponseEnvelope {
+func newResponseEnvelope(sessionAttributes map[string]interface{}) *ResponseEnvelope {
 	if sessionAttributes == nil {
 		sessionAttributes = make(map[string]interface{})
 	}
@@ -77,8 +77,8 @@ func (response *Response) SetReprompt(text string) *Response {
 	return response
 }
 
-// SimpleCard creates a simple card for the response. Any present card is overwritten.
-func (response *Response) SimpleCard(title string, content string) *Response {
+// SetSimpleCard creates a simple card for the response. Any present card is overwritten.
+func (response *Response) SetSimpleCard(title string, content string) *Response {
 	response.Card = &Card{
 		Type:    "Simple",
 		Title:   title,

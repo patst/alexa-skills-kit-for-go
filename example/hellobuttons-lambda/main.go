@@ -103,47 +103,26 @@ func sessionEndedRequestHandler(request *alexa.SessionEndedRequest, response *al
 func launchRequestHandler(request *alexa.LaunchRequest, responseEnvelope *alexa.ResponseEnvelope) {
 	log.Println("Launch request received. SessionID: ", request.Session.SessionID)
 
-	directive := alexa.NewGameEngineStartInputDirective()
-	directive.Timeout = 30000
-	directive.Recognizers = map[string]interface{}{
-		"button_down_recognizer": alexa.GameEnginePatternRecognizer{
-			Type:   "match",
-			Fuzzy:  false,
-			Anchor: "end",
-			Pattern: []alexa.GameEnginePattern{
-				alexa.GameEnginePattern{
-					Action: "down",
-				},
-			},
-		},
-		"button_up_recognizer": alexa.GameEnginePatternRecognizer{
-			Type:   "match",
-			Fuzzy:  false,
-			Anchor: "end",
-			Pattern: []alexa.GameEnginePattern{
-				alexa.GameEnginePattern{
-					Action: "up",
-				},
-			},
-		},
-	}
-	directive.Events = map[string]alexa.GameEngineRegistrationEvent{
-		"button_down_event": alexa.GameEngineRegistrationEvent{
-			Meets:                 []string{"button_down_recognizer"},
-			Reports:               "matches",
-			ShouldEndInputHandler: false,
-		},
-		"button_up_event": alexa.GameEngineRegistrationEvent{
-			Meets:                 []string{"button_up_recognizer"},
-			Reports:               "matches",
-			ShouldEndInputHandler: false,
-		},
-		"timeout": alexa.GameEngineRegistrationEvent{
-			Meets:                 []string{"timed out"},
-			Reports:               "history",
-			ShouldEndInputHandler: true,
-		},
-	}
+	directive := alexa.NewGameEngineStartInputDirective(30000)
+	buttonDownRecognizer := directive.AddPatternRecognizer("button_down_recognizer")
+	buttonDownRecognizer.Fuzzy = false
+	buttonDownRecognizer.Anchor = "end"
+	buttonDownRecognizer.AddPattern(nil, nil, "down")
+
+	buttonUpRecognizer := directive.AddPatternRecognizer("button_up_recognizer")
+	buttonUpRecognizer.Fuzzy = false
+	buttonUpRecognizer.Anchor = "end"
+	buttonUpRecognizer.AddPattern(nil, nil, "up")
+
+	buttonDownEvent := directive.AddEvent("button_down_event", false, []string{"button_down_recognizer"})
+	buttonDownEvent.Reports = "matches"
+
+	buttonUpEvent := directive.AddEvent("button_up_event", false, []string{"button_up_recognizer"})
+	buttonUpEvent.Reports = "matches"
+
+	timeoutEvent := directive.AddEvent("timeout", true, []string{"timed out"})
+	timeoutEvent.Reports = "history"
+
 	responseEnvelope.Response.AddDirective(directive)
 
 	// Preserve the originatingRequestId.  We'll use this to stop the InputHandler later. See the Note at https://developer.amazon.com/docs/gadget-skills/receive-echo-button-events.html#start

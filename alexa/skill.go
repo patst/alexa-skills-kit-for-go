@@ -31,7 +31,7 @@ func (requestEnvelope *RequestEnvelope) handleRequest(skill *Skill) (*ResponseEn
 	requestType := commonRequest.Type
 
 	// Create response and map the session attributes from the request
-	response := NewResponseEnvelope(requestEnvelope.Session.Attributes)
+	response := newResponseEnvelope(requestEnvelope.Session.Attributes)
 
 	// Request handling
 	if requestType == "LaunchRequest" {
