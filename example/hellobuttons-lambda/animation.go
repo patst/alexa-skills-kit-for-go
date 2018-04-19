@@ -56,11 +56,11 @@ func buildButtonDownAnimationDirective(targetGadgets []string) alexa.GadgetContr
 		TargetGadgets: targetGadgets,
 		Parameters: alexa.GadgetParameters{
 			Animations: []alexa.GadgetAnimation{
-				alexa.GadgetAnimation{
+				{
 					Repeat:       1,
 					TargetLights: []string{"1"},
 					Sequence: []alexa.GadgetAnimationStep{
-						alexa.GadgetAnimationStep{
+						{
 							DurationMs: 300,
 							Color:      "FFFF00",
 							Blend:      false,
@@ -82,11 +82,11 @@ func buildButtonUpAnimationDirective(targetGadgets []string) alexa.GadgetControl
 		TargetGadgets: targetGadgets,
 		Parameters: alexa.GadgetParameters{
 			Animations: []alexa.GadgetAnimation{
-				alexa.GadgetAnimation{
+				{
 					Repeat:       1,
 					TargetLights: []string{"1"},
 					Sequence: []alexa.GadgetAnimationStep{
-						alexa.GadgetAnimationStep{
+						{
 							DurationMs: 300,
 							Color:      "00FFFF",
 							Blend:      false,
@@ -108,7 +108,7 @@ func buildButtonIdleAnimationDirective(targetGadgets []string, animation []alexa
 		TargetGadgets: targetGadgets,
 		Parameters: alexa.GadgetParameters{
 			Animations: []alexa.GadgetAnimation{
-				alexa.GadgetAnimation{
+				{
 					Repeat:       100,
 					TargetLights: []string{"1"},
 					Sequence:     animation,

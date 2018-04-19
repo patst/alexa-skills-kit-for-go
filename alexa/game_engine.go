@@ -97,7 +97,7 @@ func NewGameEngineStopInputHandlerDirective(originatingRequestID string) *GameEn
 	}
 }
 
-// AddGameEnginePatternRecognizer adds a recognizer with the given name and returns the reference. The recognizer is true when all of the specified events have occurred in the specified order.
+// AddPatternRecognizer adds a recognizer with the given name and returns the reference. The recognizer is true when all of the specified events have occurred in the specified order.
 func (sid *GameEngineStartInputDirective) AddPatternRecognizer(name string) *GameEnginePatternRecognizer {
 	recognizer := &GameEnginePatternRecognizer{
 		Type:    "match",
@@ -117,7 +117,7 @@ func (gep *GameEnginePatternRecognizer) AddPattern(gadgetIds, colors []string, a
 	gep.Pattern = append(gep.Pattern, pattern)
 }
 
-// AddGameEngineDeviationRecognizer adds a recognizer with the given name and returns the reference.
+// AddDeviationRecognizer adds a recognizer with the given name and returns the reference.
 func (sid *GameEngineStartInputDirective) AddDeviationRecognizer(name string, recognizerName string) *GameEngineDeviationRecognizer {
 	recognizer := &GameEngineDeviationRecognizer{
 		Type:       "deviation",
@@ -140,7 +140,7 @@ func (sid *GameEngineStartInputDirective) AddEvent(name string, shouldEndInputHa
 	return &event
 }
 
-// AddGameEngineProgressRecognizer adds a recognizer with the given name and returns the reference. The recognizer is true when all of the specified events have occurred in the specified order.
+// AddProgressRecognizer adds a recognizer with the given name and returns the reference. The recognizer is true when all of the specified events have occurred in the specified order.
 func (sid *GameEngineStartInputDirective) AddProgressRecognizer(name, recognizerName, completion string) *GameEngineProgressRecognizer {
 	recognizer := &GameEngineProgressRecognizer{
 		Type:       "progress",
