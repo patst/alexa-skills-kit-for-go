@@ -1,6 +1,21 @@
 ## `alexa-skills-kit-for-go`: Create Amazon Alexa Go skills
 
-[![Go Report Card](https://goreportcard.com/badge/patst/alexa-skills-kit-for-go)](https://goreportcard.com/report/patst/alexa-skills-kit-for-go) [![Build Status](https://travis-ci.org/patst/alexa-skills-kit-for-go.svg?branch=master)](https://travis-ci.org/patst/alexa-skills-kit-for-go) [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/patst/alexa-skills-kit-for-go/blob/master/LICENSE) [![GoDoc](https://godoc.org/github.com/patst/alexa-skills-kit-for-go?status.svg)](https://godoc.org/github.com/patst/alexa-skills-kit-for-go)
+[![GoDoc][1]][2]
+[![GoCard][3]][4]
+[![Build Status][5]][6]
+[![codecov][7]][8]
+[![License][9]][10]
+
+[1]: https://godoc.org/github.com/patst/alexa-skills-kit-for-go?status.svg
+[2]: https://godoc.org/github.com/patst/alexa-skills-kit-for-go
+[3]: https://goreportcard.com/badge/patst/alexa-skills-kit-for-go
+[4]: https://goreportcard.com/report/patst/alexa-skills-kit-for-go
+[5]: https://travis-ci.org/patst/alexa-skills-kit-for-go.svg?branch=master
+[6]: https://travis-ci.org/patst/alexa-skills-kit-for-go
+[7]: https://codecov.io/gh/patst/alexa-skills-kit-for-go/branch/master/graph/badge.svg
+[8]: https://codecov.io/gh/patst/alexa-skills-kit-for-go
+[9]: https://img.shields.io/badge/License-Apache%202.0-blue.svg
+[10]: https://github.com/patst/alexa-skills-kit-for-go/blob/master/LICENSE
 
 This library is for building Amazon Alexa custom skills with Golang. Unfortunately Amazon does only provide Alexa SDKs for building skills with Java and NodeJS.
 
