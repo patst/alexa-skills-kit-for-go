@@ -152,9 +152,7 @@ func (requestEnvelope *RequestEnvelope) verifyTimestamp() bool {
 	if err != nil {
 		log.Println("Error parsing request timestamp with value ", timestampStr, requestEnvelope.Request)
 	}
-	now := time.Now().UTC()
-	if requestTimestamp.After(now.Add(time.Duration(30) * time.Second)) {
-		//	if time.Since(requestTimestamp).Seconds() < (time.Duration(30) * time.Second).Seconds() {
+	if time.Since(requestTimestamp).Seconds() < (time.Duration(30) * time.Second).Seconds() {
 		return true
 	}
 	return false

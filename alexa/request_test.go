@@ -160,7 +160,7 @@ func TestTimestampOkay(t *testing.T) {
 	//	 Timestamp okay
 	okayTimestamp := &RequestEnvelope{
 		Request: map[string]interface{}{
-			"timestamp": time.Now().Format(timeformat),
+			"timestamp": time.Now().UTC().Format(timeformat),
 		},
 	}
 	assert.True(t, okayTimestamp.verifyTimestamp())
