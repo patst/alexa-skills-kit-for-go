@@ -76,7 +76,7 @@ func (skill *Skill) GetHTTPSkillHandler() http.Handler {
 func (requestEnvelope *RequestEnvelope) isRequestValid(expectedAppID string) error {
 	// Check the timestamp
 	if !requestEnvelope.verifyTimestamp() {
-		return errors.New("Request too old to continue (>150s).")
+		return errors.New("Request too old to continue (>150s)")
 	}
 
 	// Check the app id
@@ -125,7 +125,7 @@ func isValidAlexaCertificate(r *http.Request) error {
 	}
 
 	if !foundName {
-		return errors.New("Amazon certificate invalid.")
+		return errors.New("Amazon certificate invalid")
 	}
 
 	// Verify the key
@@ -143,7 +143,7 @@ func isValidAlexaCertificate(r *http.Request) error {
 
 	err = rsa.VerifyPKCS1v15(publicKey.(*rsa.PublicKey), crypto.SHA1, hash.Sum(nil), encryptedSig)
 	if err != nil {
-		return errors.New("Signature match failed.")
+		return errors.New("Signature match failed")
 	}
 
 	return nil

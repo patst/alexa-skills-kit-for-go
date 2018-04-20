@@ -46,7 +46,7 @@ type GameEngineProgressRecognizer struct {
 	// Must be progress
 	Type       string `json:"type"`
 	Recognizer string `json:"recognizer"`
-	Completion string `json:"completion"`
+	Completion int    `json:"completion"`
 }
 
 // GameEngineRegistrationEvent object is where you define the conditions that must be met for your skill to be notified of Echo Button input. You must define at least one event.
@@ -80,21 +80,25 @@ type GameEngineInputHandlerEventRequest struct {
 	Events               []GameEngineInputEvent `json:"events"`
 }
 
-// NewGameEngineStartInputDirective creates a new directive with StartInputerHandler Type.
-func NewGameEngineStartInputDirective(timeout int) *GameEngineStartInputDirective {
-	return &GameEngineStartInputDirective{
+// AddGameEngineStartInputDirective creates a new directive with StartInputerHandler Type and adds it to the response.
+func (r *Response) AddGameEngineStartInputDirective(timeout int) *GameEngineStartInputDirective {
+	d := &GameEngineStartInputDirective{
 		Type:        "GameEngine.StartInputHandler",
 		Timeout:     timeout,
 		Recognizers: make(map[string]interface{}),
 	}
+	r.AddDirective(d)
+	return d
 }
 
-// NewGameEngineStopInputHandlerDirective creates a new directive to stop listening for input events.
-func NewGameEngineStopInputHandlerDirective(originatingRequestID string) *GameEngineStopInputHandlerDirective {
-	return &GameEngineStopInputHandlerDirective{
+// AddGameEngineStopInputHandlerDirective creates a new directive to stop listening for input events and adds it to the response.
+func (r *Response) AddGameEngineStopInputHandlerDirective(originatingRequestID string) *GameEngineStopInputHandlerDirective {
+	d := &GameEngineStopInputHandlerDirective{
 		Type:                 "GameEngine.StopInputHandler",
 		OriginatingRequestID: originatingRequestID,
 	}
+	r.AddDirective(d)
+	return d
 }
 
 // AddPatternRecognizer adds a recognizer with the given name and returns the reference. The recognizer is true when all of the specified events have occurred in the specified order.
@@ -141,7 +145,7 @@ func (sid *GameEngineStartInputDirective) AddEvent(name string, shouldEndInputHa
 }
 
 // AddProgressRecognizer adds a recognizer with the given name and returns the reference. The recognizer is true when all of the specified events have occurred in the specified order.
-func (sid *GameEngineStartInputDirective) AddProgressRecognizer(name, recognizerName, completion string) *GameEngineProgressRecognizer {
+func (sid *GameEngineStartInputDirective) AddProgressRecognizer(name, recognizerName string, completion int) *GameEngineProgressRecognizer {
 	recognizer := &GameEngineProgressRecognizer{
 		Type:       "progress",
 		Recognizer: recognizerName,

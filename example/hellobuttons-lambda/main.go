@@ -103,7 +103,7 @@ func sessionEndedRequestHandler(request *alexa.SessionEndedRequest, response *al
 func launchRequestHandler(request *alexa.LaunchRequest, responseEnvelope *alexa.ResponseEnvelope) {
 	log.Println("Launch request received. SessionID: ", request.Session.SessionID)
 
-	directive := alexa.NewGameEngineStartInputDirective(30000)
+	directive := responseEnvelope.Response.AddGameEngineStartInputDirective(30000)
 	buttonDownRecognizer := directive.AddPatternRecognizer("button_down_recognizer")
 	buttonDownRecognizer.Fuzzy = false
 	buttonDownRecognizer.Anchor = "end"
@@ -122,8 +122,6 @@ func launchRequestHandler(request *alexa.LaunchRequest, responseEnvelope *alexa.
 
 	timeoutEvent := directive.AddEvent("timeout", true, []string{"timed out"})
 	timeoutEvent.Reports = "history"
-
-	responseEnvelope.Response.AddDirective(directive)
 
 	// Preserve the originatingRequestId.  We'll use this to stop the InputHandler later. See the Note at https://developer.amazon.com/docs/gadget-skills/receive-echo-button-events.html#start
 	responseEnvelope.SessionAttributes["inputHandler_originatingRequestId"] = request.RequestID
@@ -168,7 +166,7 @@ func helpIntentHandler(request *alexa.IntentRequest, responseEnvelope *alexa.Res
 func stopIntentHandler(request *alexa.IntentRequest, responseEnvelope *alexa.ResponseEnvelope) {
 	responseEnvelope.Response.SetOutputSpeech("Thank you for using the Gadgets Test Skill.  Goodbye.")
 	if originatingRequestID, ok := request.Session.Attributes["inputHandler_originatingRequestId"]; ok {
-		responseEnvelope.Response.AddDirective(alexa.NewGameEngineStopInputHandlerDirective(originatingRequestID.(string)))
+		responseEnvelope.Response.AddGameEngineStopInputHandlerDirective(originatingRequestID.(string))
 	}
 	responseEnvelope.Response.ShouldEndSession = true
 }
@@ -176,7 +174,7 @@ func stopIntentHandler(request *alexa.IntentRequest, responseEnvelope *alexa.Res
 func cancelIntentHandler(request *alexa.IntentRequest, responseEnvelope *alexa.ResponseEnvelope) {
 	responseEnvelope.Response.SetOutputSpeech("Thank you for using the Gadgets Test Skill.  Goodbye.")
 	if originatingRequestID, ok := request.Session.Attributes["inputHandler_originatingRequestId"]; ok {
-		responseEnvelope.Response.AddDirective(alexa.NewGameEngineStopInputHandlerDirective(originatingRequestID.(string)))
+		responseEnvelope.Response.AddGameEngineStopInputHandlerDirective(originatingRequestID.(string))
 	}
 	responseEnvelope.Response.ShouldEndSession = true
 }

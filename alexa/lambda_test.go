@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"os"
 	"testing"
-	"time"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -16,6 +15,7 @@ func TestLambdaCall(t *testing.T) {
 		OnLaunch: func(req *LaunchRequest, res *ResponseEnvelope) {
 			res.Response.SetSimpleCard("title", "test")
 		},
+		SkipValidation: true,
 	}
 	skillHandler := skill.GetLambdaSkillHandler()
 
@@ -26,9 +26,6 @@ func TestLambdaCall(t *testing.T) {
 
 	var event map[string]interface{}
 	json.NewDecoder(launchRequestReader).Decode(&event)
-
-	// Set a recent timestamp
-	event["request"].(map[string]interface{})["timestamp"] = time.Now().Format("2006-01-02T15:04:05Z")
 
 	result, err := skillHandler(context.TODO(), event)
 

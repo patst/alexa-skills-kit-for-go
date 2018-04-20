@@ -147,12 +147,19 @@ func (cr *CommonRequest) setSession(session *Session) {
 // VerifyTimestamp checks if the the timestamp is not older than 30 seconds
 func (requestEnvelope *RequestEnvelope) verifyTimestamp() bool {
 	timestampStr := requestEnvelope.Request.(map[string]interface{})["timestamp"].(string)
+
 	requestTimestamp, err := time.Parse("2006-01-02T15:04:05Z", timestampStr)
 	if err != nil {
-		log.Fatalln("Error parsing request timestamp with value ", timestampStr)
+		log.Println("Error parsing request timestamp with value ", timestampStr, requestEnvelope.Request)
 	}
-	if time.Since(requestTimestamp) < time.Duration(30)*time.Second {
+	now := time.Now().UTC()
+	if requestTimestamp.After(now.Add(time.Duration(30) * time.Second)) {
+		//	if time.Since(requestTimestamp).Seconds() < (time.Duration(30) * time.Second).Seconds() {
 		return true
 	}
+	log.Println("now           ", now)
+	log.Println("req timestamp ", requestTimestamp)
+	log.Println("now.After(reqTimestamp)=", now.After(requestTimestamp))
+	log.Println("requestTimestamp.After(now.Add(time.Duration(30)*time.Second)=", requestTimestamp.After(now.Add(time.Duration(30)*time.Second)))
 	return false
 }
