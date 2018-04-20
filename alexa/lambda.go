@@ -14,14 +14,10 @@ type LambdaHandler func(ctx context.Context, event interface{}) (interface{}, er
 // GetLambdaSkillHandler provides a handler which can be used in a lambda function.
 func (skill *Skill) GetLambdaSkillHandler() LambdaHandler {
 	return func(ctx context.Context, event interface{}) (interface{}, error) {
-		bodyBytes, err := json.Marshal(event)
-
-		if err != nil {
-			return nil, err
-		}
+		bodyBytes, _ := json.Marshal(event)
 
 		var requestEnvelope *RequestEnvelope
-		err = json.NewDecoder(bytes.NewReader(bodyBytes)).Decode(&requestEnvelope)
+		err := json.NewDecoder(bytes.NewReader(bodyBytes)).Decode(&requestEnvelope)
 
 		if skill.Verbose {
 			log.Println("--> Request: ", string(bodyBytes))

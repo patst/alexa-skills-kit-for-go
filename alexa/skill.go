@@ -86,7 +86,7 @@ func (requestEnvelope *RequestEnvelope) handleRequest(skill *Skill) (*ResponseEn
 			skill.OnSystemException(&request, response)
 		}
 	} else {
-		return nil, errors.New("Invalid request")
+		return nil, errors.New("Invalid request type: " + requestType)
 	}
 	return response, nil
 }
