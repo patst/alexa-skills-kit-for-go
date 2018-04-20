@@ -2,9 +2,11 @@ package alexa
 
 import (
 	"encoding/json"
-	"github.com/stretchr/testify/assert"
 	"io/ioutil"
 	"testing"
+	"time"
+
+	"github.com/stretchr/testify/assert"
 )
 
 var skill = Skill{}
@@ -128,4 +130,38 @@ func TestContextAttributes(t *testing.T) {
 		t.Fatal("Error occurred", err)
 		t.FailNow()
 	}
+}
+
+func TestTimestampOld(t *testing.T) {
+	timeformat := "2006-01-02T15:04:05Z"
+
+	nowPlusOne := time.Now().UTC().Add(-time.Hour).Format(timeformat)
+	// Timestamp to old
+	oldTimestamp := &RequestEnvelope{
+		Request: map[string]interface{}{
+			"timestamp": nowPlusOne,
+		},
+	}
+	assert.False(t, oldTimestamp.verifyTimestamp())
+}
+func TestTimestampWrongFormat(t *testing.T) {
+	//Invalid format
+	invalidTimestamp := &RequestEnvelope{
+		Request: map[string]interface{}{
+			"timestamp": "invalid",
+		},
+	}
+	assert.False(t, invalidTimestamp.verifyTimestamp())
+
+}
+
+func TestTimestampOkay(t *testing.T) {
+	timeformat := "2006-01-02T15:04:05Z"
+	//	 Timestamp okay
+	okayTimestamp := &RequestEnvelope{
+		Request: map[string]interface{}{
+			"timestamp": time.Now().UTC().Format(timeformat),
+		},
+	}
+	assert.True(t, okayTimestamp.verifyTimestamp())
 }

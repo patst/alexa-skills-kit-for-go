@@ -110,14 +110,23 @@ type IntentSlot struct {
 // SessionEndedRequest if a skill is stopped or cancelled.
 type SessionEndedRequest struct {
 	CommonRequest
-	Reason string      `json:"reason,omitempty"`
-	Error  interface{} `json:"error,omitempty"`
+	Reason string `json:"reason,omitempty"`
+	Error  struct {
+		Type    string `json:"type"`
+		Message string `json:"message"`
+	} `json:"error,omitempty"`
 }
 
-// AudioPlayerRequest for input events of audio player interface.
-type AudioPlayerRequest struct {
+// SystemExceptionEncounteredRequest is send ff a GameEngine directive that you send fails, then your skill will be invoked with a standard System.ExceptionEncountered request. Any directives included in the response are ignored.
+type SystemExceptionEncounteredRequest struct {
 	CommonRequest
-	// tbd
+	Error struct {
+		Type    string `json:"type"`
+		Message string `json:"message"`
+	} `json:"error"`
+	Cause struct {
+		RequestID string `json:"requestId"`
+	} `json:"cause"`
 }
 
 // GetTypedRequest provides the request object mapped to the given struct
@@ -138,11 +147,12 @@ func (cr *CommonRequest) setSession(session *Session) {
 // VerifyTimestamp checks if the the timestamp is not older than 30 seconds
 func (requestEnvelope *RequestEnvelope) verifyTimestamp() bool {
 	timestampStr := requestEnvelope.Request.(map[string]interface{})["timestamp"].(string)
+
 	requestTimestamp, err := time.Parse("2006-01-02T15:04:05Z", timestampStr)
 	if err != nil {
-		log.Fatalln("Error parsing request timestamp with value ", timestampStr)
+		log.Println("Error parsing request timestamp with value ", timestampStr, requestEnvelope.Request)
 	}
-	if time.Since(requestTimestamp) < time.Duration(30)*time.Second {
+	if time.Since(requestTimestamp).Seconds() < (time.Duration(30) * time.Second).Seconds() {
 		return true
 	}
 	return false

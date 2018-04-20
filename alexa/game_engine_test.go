@@ -46,33 +46,33 @@ func TestRegisterForEvents(t *testing.T) {
 	}
 	skillHandler := skill.GetHTTPSkillHandler()
 
-	skill.OnLaunch = func(request *LaunchRequest, response *ResponseEnvelope) {
-		response.Response.SetOutputSpeech("outputspeech")
-		response.Response.SetReprompt("reprompt")
-		response.Response.SetSimpleCard("TestCard", "TestCardText")
+	skill.OnLaunch = func(request *LaunchRequest, responseEnvelope *ResponseEnvelope) {
+		responseEnvelope.Response.SetOutputSpeech("outputspeech")
+		responseEnvelope.Response.SetReprompt("reprompt")
+		responseEnvelope.Response.SetSimpleCard("TestCard", "TestCardText")
 
-		directive := NewGameEngineStartInputDirective(30000)
+		directive := responseEnvelope.Response.AddGameEngineStartInputDirective(30000)
 		buttonDownRecognizer := directive.AddPatternRecognizer("button_down_recognizer")
 		buttonDownRecognizer.Fuzzy = false
 		buttonDownRecognizer.Anchor = "end"
 		buttonDownRecognizer.AddPattern(nil, nil, "down")
 
-		buttonUpRecognizer := directive.AddPatternRecognizer("button_up_recognizer")
-		buttonUpRecognizer.Fuzzy = false
-		buttonUpRecognizer.Anchor = "end"
-		buttonUpRecognizer.AddPattern(nil, nil, "up")
+		directive.AddDeviationRecognizer("deviation_recognizer", "button_down_recognizer")
+
+		directive.AddProgressRecognizer("progress_recognizer", "button_down_recognizer", 50)
 
 		buttonDownEvent := directive.AddEvent("button_down_event", false, []string{"button_down_recognizer"})
 		buttonDownEvent.Reports = "matches"
 
-		buttonUpEvent := directive.AddEvent("button_up_event", false, []string{"button_up_recognizer"})
-		buttonUpEvent.Reports = "matches"
+		deviationEvent := directive.AddEvent("deviation_event", false, []string{"deviation_recognizer"})
+		deviationEvent.Reports = "matches"
 
 		timeoutEvent := directive.AddEvent("timeout", true, []string{"timed out"})
 		timeoutEvent.Reports = "history"
 
-		response.Response.AddDirective(directive)
-		response.Response.ShouldEndSession = false
+		responseEnvelope.Response.ShouldEndSession = false
+
+		responseEnvelope.Response.AddGameEngineStopInputHandlerDirective(request.RequestID)
 
 	}
 	launchRequestReader, err := os.Open("../resources/launch_request.json")

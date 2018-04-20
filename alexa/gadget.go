@@ -45,18 +45,6 @@ type GadgetAnimationStep struct {
 	Blend      bool   `json:"blend"`
 }
 
-// SystemExceptionEncounteredRequest is send ff a GameEngine directive that you send fails, then your skill will be invoked with a standard System.ExceptionEncountered request. Any directives included in the response are ignored.
-type SystemExceptionEncounteredRequest struct {
-	CommonRequest
-	Error struct {
-		Type    string `json:"type"`
-		Message string `json:"message"`
-	} `json:"error"`
-	Cause struct {
-		RequestID string `json:"requestId"`
-	} `json:"cause"`
-}
-
 // RgbToHex converts single rgb values to a hex string representation.
 func RgbToHex(r, g, b int) string {
 	return fmt.Sprintf("%02s%02s%02s", strconv.FormatInt(int64(r), 16), strconv.FormatInt(int64(g), 16), strconv.FormatInt(int64(b), 16))

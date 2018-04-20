@@ -11,13 +11,14 @@ type Skill struct {
 	// SkipValidation skips any request validation (TEST ONLY!)
 	SkipValidation bool
 	// Verbose enables request and response logging
-	Verbose            bool
-	OnLaunch           func(*LaunchRequest, *ResponseEnvelope)
-	OnIntent           func(*IntentRequest, *ResponseEnvelope)
-	OnSessionEnded     func(*SessionEndedRequest, *ResponseEnvelope)
-	OnAudioPlayerState func(*AudioPlayerRequest, *ResponseEnvelope)
-	OnSystemException  func(*SystemExceptionEncounteredRequest, *ResponseEnvelope)
-	OnGameEngineEvent  func(*GameEngineInputHandlerEventRequest, *ResponseEnvelope)
+	Verbose                  bool
+	OnLaunch                 func(*LaunchRequest, *ResponseEnvelope)
+	OnIntent                 func(*IntentRequest, *ResponseEnvelope)
+	OnSessionEnded           func(*SessionEndedRequest, *ResponseEnvelope)
+	OnAudioPlayerState       func(*AudioPlayerRequest, *ResponseEnvelope)
+	OnAudioPlayerFailedState func(*AudioPlayerPlaybackFailedRequest, *ResponseEnvelope)
+	OnSystemException        func(*SystemExceptionEncounteredRequest, *ResponseEnvelope)
+	OnGameEngineEvent        func(*GameEngineInputHandlerEventRequest, *ResponseEnvelope)
 }
 
 func (requestEnvelope *RequestEnvelope) handleRequest(skill *Skill) (*ResponseEnvelope, error) {
@@ -59,10 +60,16 @@ func (requestEnvelope *RequestEnvelope) handleRequest(skill *Skill) (*ResponseEn
 		}
 	} else if strings.HasPrefix(requestType, "AudioPlayer.") {
 		if skill.OnAudioPlayerState != nil {
-			var request AudioPlayerRequest
 			// Create concrete types
-			requestEnvelope.getTypedRequest(&request)
-			skill.OnAudioPlayerState(&request, response)
+			if requestType == "AudioPlayer.PlaybackFailed" {
+				var request AudioPlayerPlaybackFailedRequest
+				requestEnvelope.getTypedRequest(&request)
+				skill.OnAudioPlayerFailedState(&request, response)
+			} else {
+				var request AudioPlayerRequest
+				requestEnvelope.getTypedRequest(&request)
+				skill.OnAudioPlayerState(&request, response)
+			}
 		}
 	} else if strings.HasPrefix(requestType, "GameEngine.") {
 		if skill.OnGameEngineEvent != nil {
@@ -79,7 +86,7 @@ func (requestEnvelope *RequestEnvelope) handleRequest(skill *Skill) (*ResponseEn
 			skill.OnSystemException(&request, response)
 		}
 	} else {
-		return nil, errors.New("Invalid request")
+		return nil, errors.New("Invalid request type: " + requestType)
 	}
 	return response, nil
 }

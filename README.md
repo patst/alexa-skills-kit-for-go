@@ -28,7 +28,6 @@ Supported features:
 * SessionStorage - store data in session attribute
 
 Not supported so far:
-* AudioPlayer interface
 * Dialog Interface
 * Device Address Service
 * List Management Service
