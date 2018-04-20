@@ -157,9 +157,5 @@ func (requestEnvelope *RequestEnvelope) verifyTimestamp() bool {
 		//	if time.Since(requestTimestamp).Seconds() < (time.Duration(30) * time.Second).Seconds() {
 		return true
 	}
-	log.Println("now           ", now)
-	log.Println("req timestamp ", requestTimestamp)
-	log.Println("now.After(reqTimestamp)=", now.After(requestTimestamp))
-	log.Println("requestTimestamp.After(now.Add(time.Duration(30)*time.Second)=", requestTimestamp.After(now.Add(time.Duration(30)*time.Second)))
 	return false
 }
