@@ -58,12 +58,14 @@ type AudioPlayerClearQueueDirective struct {
 	ClearBehavior string `json:"clearBehavior"`
 }
 
-// NewAudioPlayerPlayDirective creates a new play directive for AudioPlayer interfaces.
-func NewAudioPlayerPlayDirective(playBehavior string) *AudioPlayerPlayDirective {
-	return &AudioPlayerPlayDirective{
+// AddAudioPlayerPlayDirective creates a new play directive for AudioPlayer interfaces.
+func (r *Response) AddAudioPlayerPlayDirective(playBehavior string) *AudioPlayerPlayDirective {
+	playDirective := &AudioPlayerPlayDirective{
 		Type:         "AudioPlayer.Play",
 		PlayBehavior: playBehavior,
 	}
+	r.AddDirective(playDirective)
+	return playDirective
 }
 
 // SetAudioItemStream sets the stream attributes for the audio item associated with the play directive.
@@ -81,21 +83,25 @@ func (d *AudioPlayerPlayDirective) SetAudioItemMetadata(title, subtitle string) 
 	// TODO set image
 }
 
-// NewAudioPlayerStopDirective creates a new stop directive for AudioPlayer interface.
-func NewAudioPlayerStopDirective() *AudioPlayerStopDirective {
-	return &AudioPlayerStopDirective{
+// AddAudioPlayerStopDirective creates a new stop directive for AudioPlayer interface.
+func (r *Response) AddAudioPlayerStopDirective() *AudioPlayerStopDirective {
+	stopDirective := &AudioPlayerStopDirective{
 		Type: "AudioPlayer.Stop",
 	}
+	r.AddDirective(stopDirective)
+	return stopDirective
 }
 
-// NewAudioPlayerClearQueueDirective creates a new clear queue directive for AudioPlayer interface.
-func NewAudioPlayerClearQueueDirective(clearBehavior string) *AudioPlayerClearQueueDirective {
+// AddAudioPlayerClearQueueDirective creates a new clear queue directive for AudioPlayer interface.
+func (r *Response) AddAudioPlayerClearQueueDirective(clearBehavior string) *AudioPlayerClearQueueDirective {
 	// Must be one of the two values
 	if clearBehavior != "CLEAR_ENQUEUED" && clearBehavior != "CLEAR_ALL" {
 		log.Println("Invalid/ Unknown clearBehavior for ClearQueue directive!")
 	}
-	return &AudioPlayerClearQueueDirective{
+	clearQueueDirective := &AudioPlayerClearQueueDirective{
 		Type:          "AudioPlayer.ClearQueue",
 		ClearBehavior: clearBehavior,
 	}
+	r.AddDirective(clearQueueDirective)
+	return clearQueueDirective
 }
