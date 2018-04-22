@@ -17,7 +17,7 @@
 [9]: https://img.shields.io/badge/License-Apache%202.0-blue.svg
 [10]: https://github.com/patst/alexa-skills-kit-for-go/blob/master/LICENSE
 
-This library is for building Amazon Alexa custom skills with Golang. Unfortunately Amazon does only provide Alexa SDKs for building skills with Java and NodeJS.
+This library is for building Amazon Alexa custom skills with Go. Unfortunately Amazon does only provide Alexa SDKs for building skills with Java and NodeJS.
 
 Supported features:
 
@@ -25,13 +25,10 @@ Supported features:
 * Custom Skill as webservice backend ([AWS - Host a Custom Skill as Web Service](https://developer.amazon.com/docs/custom-skills/host-a-custom-skill-as-a-web-service.html))
 * Custom Skill as Lambda function ([AWS - Host a Custom Skill as an AWS Lambda Function](https://developer.amazon.com/docs/custom-skills/host-a-custom-skill-as-an-aws-lambda-function.html))
 * GameEngine and Gadget Skill API ([AWS - Understand Gadgets Skill API](https://developer.amazon.com/docs/gadget-skills/understand-gadgets-skill-api.html))
+* Dialog Interface ([AWS - Dialog Interface Reference](https://developer.amazon.com/docs/custom-skills/dialog-interface-reference.html))
+* Display Interface ([AWS - Display Interface Reference](https://developer.amazon.com/docs/custom-skills/display-interface-reference.html))
+* AudioPlayer Interface ([AWS - AudioPlayer Interface Reference](https://developer.amazon.com/docs/custom-skills/audioplayer-interface-reference.html))
 * SessionStorage - store data in session attribute
-
-Not supported so far:
-* Dialog Interface
-* Device Address Service
-* List Management Service
-* Asynchronous Directive Service
 
 There is a excellent API description what attributes must be included in responses and how to use the different interfaces in the [AWS Request and Response JSON reference](https://developer.amazon.com/docs/custom-skills/request-and-response-json-reference.html)
 
