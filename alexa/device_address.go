@@ -62,7 +62,6 @@ func (s *deviceAddressService) executeAlexaCall(url, accessToken string, targetO
 
 	defer resp.Body.Close()
 	respBytes, _ := ioutil.ReadAll(resp.Body)
-	log.Println("Service response: ", string(respBytes))
 	err = json.Unmarshal(respBytes, targetObj)
 	return err
 }

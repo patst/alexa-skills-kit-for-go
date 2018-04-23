@@ -3,8 +3,10 @@ package alexa
 import (
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
+	"os"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -128,4 +130,34 @@ func TestDeviceAddressServiceCountryAndPostalCode(t *testing.T) {
 	assert.Error(t, err)
 	assert.False(t, deviceAddressService.IsNotAuthorizedError(err))
 
+}
+
+func TestPermissionsConsentCard(t *testing.T) {
+	skill := Skill{
+		ApplicationID:  "amzn1.echo-sdk-ams.app.000000-d0ed-0000-ad00-000000d00ebe",
+		SkipValidation: true,
+	}
+	skillHandler := skill.GetHTTPSkillHandler()
+
+	skill.OnLaunch = func(request *LaunchRequest, response *ResponseEnvelope) {
+		response.Response.SetAskForPermissionsConsentCard("Consent", "Please allow address info", []string{"read::alexa:device:all:address"})
+	}
+
+	launchRequestReader, err := os.Open("../resources/launch_request.json")
+	if err != nil {
+		t.Error("Error reading input file", err)
+	}
+
+	httpRequest := httptest.NewRequest("POST", "/", launchRequestReader)
+	responseWriter := httptest.NewRecorder()
+	skillHandler.ServeHTTP(responseWriter, httpRequest)
+	if responseWriter.Code != http.StatusOK {
+		t.Errorf("handler returned wrong status code: got %v want %v",
+			responseWriter.Code, http.StatusOK)
+	}
+	respBytes, _ := ioutil.ReadAll(responseWriter.Body)
+	var resp map[string]interface{}
+	json.Unmarshal(respBytes, &resp)
+	card := resp["response"].(map[string]interface{})["card"].(map[string]interface{})
+	assert.Equal(t, "AskForPermissionsConsent", card["type"])
 }
