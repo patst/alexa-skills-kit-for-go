@@ -28,6 +28,7 @@ Supported features:
 * Dialog Interface ([AWS - Dialog Interface Reference](https://developer.amazon.com/docs/custom-skills/dialog-interface-reference.html))
 * Display Interface ([AWS - Display Interface Reference](https://developer.amazon.com/docs/custom-skills/display-interface-reference.html))
 * AudioPlayer Interface ([AWS - AudioPlayer Interface Reference](https://developer.amazon.com/docs/custom-skills/audioplayer-interface-reference.html))
+* Device Address Service ([AWS - Enhance you skill with customer address information](https://developer.amazon.com/docs/custom-skills/device-address-api.html))
 * SessionStorage - store data in session attribute
 
 There is a excellent API description what attributes must be included in responses and how to use the different interfaces in the [AWS Request and Response JSON reference](https://developer.amazon.com/docs/custom-skills/request-and-response-json-reference.html)

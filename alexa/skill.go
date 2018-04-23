@@ -21,6 +21,11 @@ type Skill struct {
 	OnGameEngineEvent        func(*GameEngineInputHandlerEventRequest, *ResponseEnvelope)
 }
 
+// GetDeviceAddressService provides an instance of the device address service to query a customers address information.
+func GetDeviceAddressService() DeviceAddressService {
+	return deviceAddressServiceInstance
+}
+
 func (requestEnvelope *RequestEnvelope) handleRequest(skill *Skill) (*ResponseEnvelope, error) {
 	//Read the type for this request to do the correct routing
 	var commonRequest CommonRequest
