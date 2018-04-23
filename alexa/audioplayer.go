@@ -92,11 +92,13 @@ func (r *Response) AddAudioPlayerStopDirective() *AudioPlayerStopDirective {
 	return stopDirective
 }
 
+const invalidClearBehaviorStr string = "Invalid/ Unknown clearBehavior for ClearQueue directive!"
+
 // AddAudioPlayerClearQueueDirective creates a new clear queue directive for AudioPlayer interface.
 func (r *Response) AddAudioPlayerClearQueueDirective(clearBehavior string) *AudioPlayerClearQueueDirective {
 	// Must be one of the two values
 	if clearBehavior != "CLEAR_ENQUEUED" && clearBehavior != "CLEAR_ALL" {
-		log.Println("Invalid/ Unknown clearBehavior for ClearQueue directive!")
+		log.Println(invalidClearBehaviorStr)
 	}
 	clearQueueDirective := &AudioPlayerClearQueueDirective{
 		Type:          "AudioPlayer.ClearQueue",

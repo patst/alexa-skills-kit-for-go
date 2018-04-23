@@ -43,6 +43,9 @@ type Card struct {
 		SmallImageURL string `json:"smallImageUrl,omitempty"`
 		LargeImageURL string `json:"largeImageUrl,omitempty"`
 	} `json:"image,omitempty"`
+	// A list of scope strings that maps to Alexa permissions.
+	// Include only those Alexa permissions that are both needed by your skill and that are declared in your skill metadata on the Amazon Developer Portal.
+	Permissions []string `json:"permissions"`
 }
 
 // NewResponseEnvelope creates a response skeletion for alexa responses
@@ -83,6 +86,18 @@ func (response *Response) SetSimpleCard(title string, content string) *Response 
 		Type:    "Simple",
 		Title:   title,
 		Content: content,
+	}
+	return response
+}
+
+// SetAskForPermissionsConsentCard creates a card to ask for permissions to read user or list data. Any present card is overwritten.
+// Permission examples are 'read::alexa:device:all:address' or 'read::alexa:device:all:address:country_and_postal_code'
+func (response *Response) SetAskForPermissionsConsentCard(title, content string, permissions []string) *Response {
+	response.Card = &Card{
+		Type:        "AskForPermissionsConsent",
+		Title:       title,
+		Content:     content,
+		Permissions: permissions,
 	}
 	return response
 }

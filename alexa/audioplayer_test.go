@@ -1,10 +1,14 @@
 package alexa
 
 import (
+	"bytes"
+	"log"
 	"net/http"
 	"net/http/httptest"
 	"os"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestAudioPlayerDirectives(t *testing.T) {
@@ -34,4 +38,26 @@ func TestAudioPlayerDirectives(t *testing.T) {
 		t.Errorf("handler returned wrong status code: got %v want %v",
 			responseWriter.Code, http.StatusOK)
 	}
+}
+
+func TestInvalidClearQueueMode(t *testing.T) {
+	var resp Response
+	var buf bytes.Buffer
+
+	//Redirect log output
+	log.SetOutput(&buf)
+	defer func() {
+		log.SetOutput(os.Stderr)
+	}()
+
+	//Invalid clearBehavior value
+	d := resp.AddAudioPlayerClearQueueDirective("invalidBehavior")
+	assert.NotNil(t, d)
+	assert.Contains(t, string(buf.Bytes()), invalidClearBehaviorStr)
+	buf.Reset()
+
+	//Valid clearBehavior value
+	d2 := resp.AddAudioPlayerClearQueueDirective("CLEAR_ALL")
+	assert.NotNil(t, d2)
+	assert.NotContains(t, string(buf.Bytes()), invalidClearBehaviorStr)
 }
