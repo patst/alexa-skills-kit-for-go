@@ -75,11 +75,6 @@ Example how to use the new Echo Gadget Buttons. The example is converted from th
 
 The example deploys as a lambda function. The necessary steps to create the skill are described in the above tutorial.
 
-## Next Steps
-
-* Get the Amazon NodeJS hello buttons example working
-* Provide the so far not supported features (Services, AudioPlayer Interface, Dialog Interface)
-
 ## Author
 
 Patrick Steinig ([@patst87](http://twitter.com/patst87))
