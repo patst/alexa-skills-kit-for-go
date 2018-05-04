@@ -1,11 +1,12 @@
 package alexa
 
 import (
-	"github.com/stretchr/testify/assert"
 	"net/http"
 	"net/http/httptest"
 	"os"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestGameEngineInputEvent(t *testing.T) {
@@ -70,7 +71,8 @@ func TestRegisterForEvents(t *testing.T) {
 		timeoutEvent := directive.AddEvent("timeout", true, []string{"timed out"})
 		timeoutEvent.Reports = "history"
 
-		responseEnvelope.Response.ShouldEndSession = false
+		responseEnvelope.Response.ShouldEndSession = new(bool)
+		*responseEnvelope.Response.ShouldEndSession = false
 
 		responseEnvelope.Response.AddGameEngineStopInputHandlerDirective(request.RequestID)
 

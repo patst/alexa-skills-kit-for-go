@@ -90,7 +90,8 @@ func gameEngineInputEventHandler(request *alexa.GameEngineInputHandlerEventReque
 				} else {
 					responseEnvelope.Response.SetOutputSpeech("I didn't detect any buttons.  You must have at least one Echo Button to use this skill. Goodbye.")
 				}
-				responseEnvelope.Response.ShouldEndSession = true
+				responseEnvelope.Response.ShouldEndSession = new(bool)
+				*responseEnvelope.Response.ShouldEndSession = true
 			}
 		}
 	}
@@ -168,7 +169,8 @@ func stopIntentHandler(request *alexa.IntentRequest, responseEnvelope *alexa.Res
 	if originatingRequestID, ok := request.Session.Attributes["inputHandler_originatingRequestId"]; ok {
 		responseEnvelope.Response.AddGameEngineStopInputHandlerDirective(originatingRequestID.(string))
 	}
-	responseEnvelope.Response.ShouldEndSession = true
+	responseEnvelope.Response.ShouldEndSession = new(bool)
+	*responseEnvelope.Response.ShouldEndSession = true
 }
 
 func cancelIntentHandler(request *alexa.IntentRequest, responseEnvelope *alexa.ResponseEnvelope) {
@@ -176,7 +178,8 @@ func cancelIntentHandler(request *alexa.IntentRequest, responseEnvelope *alexa.R
 	if originatingRequestID, ok := request.Session.Attributes["inputHandler_originatingRequestId"]; ok {
 		responseEnvelope.Response.AddGameEngineStopInputHandlerDirective(originatingRequestID.(string))
 	}
-	responseEnvelope.Response.ShouldEndSession = true
+	responseEnvelope.Response.ShouldEndSession = new(bool)
+	*responseEnvelope.Response.ShouldEndSession = true
 }
 
 func unhandledIntentHandler(request *alexa.IntentRequest, responseEnvelope *alexa.ResponseEnvelope) {

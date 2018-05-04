@@ -9,10 +9,11 @@ type ResponseEnvelope struct {
 
 // Response payload for alexa requests
 type Response struct {
-	OutputSpeech     *OutputSpeech `json:"outputSpeech,omitempty"`
-	Card             *Card         `json:"card,omitempty"`
-	Reprompt         *Reprompt     `json:"reprompt,omitempty"`
-	ShouldEndSession bool          `json:"shouldEndSession,omitempty"`
+	OutputSpeech *OutputSpeech `json:"outputSpeech,omitempty"`
+	Card         *Card         `json:"card,omitempty"`
+	Reprompt     *Reprompt     `json:"reprompt,omitempty"`
+	// Use a pointer to be able to specify true,false and do not set it
+	ShouldEndSession *bool         `json:"shouldEndSession,omitempty"`
 	Directives       []interface{} `json:"directives,omitempty"`
 }
 
@@ -25,7 +26,7 @@ type OutputSpeech struct {
 
 // Reprompt containing the outputSpeech to use if a re-prompt is necessary.
 type Reprompt struct {
-	OutputSpeech OutputSpeech `json:"outputSpeech"`
+	OutputSpeech *OutputSpeech `json:"outputSpeech"`
 }
 
 // Card containing a card to render to the Amazon Alexa App
@@ -72,9 +73,9 @@ func (response *Response) SetOutputSpeech(text string) *Response {
 // SetReprompt creates a PlainText reprompt output speech object for the response. Any present reprompt is overwritten.
 func (response *Response) SetReprompt(text string) *Response {
 	response.Reprompt = &Reprompt{
-		OutputSpeech: OutputSpeech{
-			Type: "PlainText",
-			Text: text,
+		OutputSpeech: &OutputSpeech{
+			Type: "SSML",
+			Ssml: "<speak> " + text + " </speak>",
 		},
 	}
 	return response

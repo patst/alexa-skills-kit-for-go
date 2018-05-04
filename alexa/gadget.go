@@ -49,3 +49,19 @@ type GadgetAnimationStep struct {
 func RgbToHex(r, g, b int) string {
 	return fmt.Sprintf("%02s%02s%02s", strconv.FormatInt(int64(r), 16), strconv.FormatInt(int64(g), 16), strconv.FormatInt(int64(b), 16))
 }
+
+// AddGadgetControllerSetLightDirective creates a new directive to stop listening for input events and adds it to the response.
+func (r *Response) AddGadgetControllerSetLightDirective(targetGadgets []string, triggerEvent GadgetTriggerEventType, triggerEventTimeMs int, animations []GadgetAnimation) *GadgetControllerSetLightDirective {
+	d := &GadgetControllerSetLightDirective{
+		Type:          "GadgetController.SetLight",
+		Version:       1,
+		TargetGadgets: targetGadgets,
+		Parameters: GadgetParameters{
+			TriggerEvent:       triggerEvent,
+			TriggerEventTimeMs: triggerEventTimeMs,
+			Animations:         animations,
+		},
+	}
+	r.AddDirective(d)
+	return d
+}
