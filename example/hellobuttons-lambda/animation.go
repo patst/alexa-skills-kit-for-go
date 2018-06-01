@@ -1,7 +1,10 @@
 package main
 
 import (
-	hex "github.com/dlion/hex2rgb"
+	"encoding/hex"
+	"fmt"
+	"strings"
+
 	"github.com/patst/alexa-skills-kit-for-go/alexa"
 )
 
@@ -22,8 +25,8 @@ func buildBreathAnimation(fromRgbHex, toRgbHex string, steps, totalDuration int)
    hexadecimal format that SetLight expects.
 */
 func buildSequentialAnimation(fromRgbHex, toRgbHex string, steps, totalDuration int) []alexa.GadgetAnimationStep {
-	fr, fg, fb := hex.Convert(fromRgbHex)
-	tr, tg, tb := hex.Convert(toRgbHex)
+	fr, fg, fb := convert(fromRgbHex)
+	tr, tg, tb := convert(toRgbHex)
 
 	deltaRed := (tr - fr) / steps
 	deltaGreen := (tg - fg) / steps
@@ -118,4 +121,18 @@ func buildButtonIdleAnimationDirective(targetGadgets []string, animation []alexa
 			TriggerEventTimeMs: 0,
 		},
 	}
+}
+
+func convert(input string) (int, int, int) {
+	if strings.HasPrefix(input, "#") {
+		input = strings.Replace(input, "#", "", 1)
+	}
+
+	if len(input) == 3 {
+		input = fmt.Sprintf("%c%c%c%c%c%c", input[0], input[0], input[1], input[1], input[2], input[2])
+	}
+
+	d, _ := hex.DecodeString(input)
+
+	return int(d[0]), int(d[1]), int(d[2])
 }
