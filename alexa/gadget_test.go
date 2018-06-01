@@ -21,16 +21,15 @@ func TestRGBToHex(t *testing.T) {
 }
 
 func convert(input string) (int, int, int) {
-	var hexString string
 	if strings.HasPrefix(input, "#") {
-		hexString = strings.Replace(input, "#", "", 1)
+		input = strings.Replace(input, "#", "", 1)
 	}
 
 	if len(input) == 3 {
-		hexString = fmt.Sprintf("%c%c%c%c%c%c", input[0], input[0], input[1], input[1], input[2], input[2])
+		input = fmt.Sprintf("%c%c%c%c%c%c", input[0], input[0], input[1], input[1], input[2], input[2])
 	}
 
-	d, _ := hex.DecodeString(hexString)
+	d, _ := hex.DecodeString(input)
 
 	return int(d[0]), int(d[1]), int(d[2])
 }
