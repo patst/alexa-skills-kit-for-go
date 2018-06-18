@@ -36,13 +36,16 @@ type DisplayTextContent struct {
 
 // DisplayImageObject references and describes the image. Multiple sources for the image can be provided.
 type DisplayImageObject struct {
-	ContentDescription string `json:"contentDescription"`
-	Sources            []struct {
-		URL          string `json:"url"`
-		Size         string `json:"size,omitempty"`
-		WidthPixels  int    `json:"widthPixels,omitempty"`
-		HeightPixels int    `json:"heightPixels,omitempty"`
-	} `json:"sources"`
+	ContentDescription string                `json:"contentDescription"`
+	Sources            []*DisplayImageSource `json:"sources"`
+}
+
+// DisplayImageSource describes the source url and size for a image.
+type DisplayImageSource struct {
+	URL          string `json:"url"`
+	Size         string `json:"size,omitempty"`
+	WidthPixels  int    `json:"widthPixels,omitempty"`
+	HeightPixels int    `json:"heightPixels,omitempty"`
 }
 
 // AddDisplayRenderTemplateDirective creates a new directive to render a body or list template for the Alexa Display Interface.
@@ -55,4 +58,19 @@ func (r *Response) AddDisplayRenderTemplateDirective(templateType string) *Displ
 	}
 	r.AddDirective(d)
 	return d
+}
+
+// AddImageSource adds source information for a image with the given size.
+func (i *DisplayImageObject) AddImageSource(size, url string, heightPixels, widthPixels int) *DisplayImageSource {
+	if i.Sources == nil {
+		i.Sources = make([]*DisplayImageSource, 0)
+	}
+	displayImageSource := &DisplayImageSource{
+		Size:         size,
+		URL:          url,
+		HeightPixels: heightPixels,
+		WidthPixels:  widthPixels,
+	}
+	i.Sources = append(i.Sources, displayImageSource)
+	return displayImageSource
 }
