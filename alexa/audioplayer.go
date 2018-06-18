@@ -38,13 +38,16 @@ type AudioPlayerPlayDirective struct {
 			ExpectedPreviousToken string `json:"expectedPreviousToken,omitempty"`
 			OffsetInMilliseconds  int    `json:"offsetInMilliseconds"`
 		} `json:"stream"`
-		Metadata struct {
-			Title           string             `json:"title,omitempty"`
-			Subtitle        string             `json:"subtitle,omitempty"`
-			Art             DisplayImageObject `json:"art,omitempty"`
-			BackgroundImage DisplayImageObject `json:"backgroundImage,omitempty"`
-		} `json:"metadata,omitempty"`
+		Metadata *AudioItemMetadata `json:"metadata,omitempty"`
 	} `json:"audioItem"`
+}
+
+// AudioItemMetadata contains an object providing metadata about the audio to be displayed on the Echo Show and Echo Spot.
+type AudioItemMetadata struct {
+	Title           string              `json:"title,omitempty"`
+	Subtitle        string              `json:"subtitle,omitempty"`
+	Art             *DisplayImageObject `json:"art,omitempty"`
+	BackgroundImage *DisplayImageObject `json:"backgroundImage,omitempty"`
 }
 
 // AudioPlayerStopDirective stopts the current audio playback
@@ -77,10 +80,28 @@ func (d *AudioPlayerPlayDirective) SetAudioItemStream(url, token, expectedPrevio
 }
 
 // SetAudioItemMetadata sets the metadata attributes for the audio item associated with the play directive.
-func (d *AudioPlayerPlayDirective) SetAudioItemMetadata(title, subtitle string) {
-	d.AudioItem.Metadata.Title = title
-	d.AudioItem.Metadata.Subtitle = subtitle
-	// TODO set image
+func (d *AudioPlayerPlayDirective) SetAudioItemMetadata(title, subtitle string) *AudioItemMetadata {
+	d.AudioItem.Metadata = &AudioItemMetadata{
+		Title:    title,
+		Subtitle: subtitle,
+	}
+	return d.AudioItem.Metadata
+}
+
+// SetArtImage sets the art image description for the audio item metadata.
+func (m *AudioItemMetadata) SetArtImage(contentDescription string) *DisplayImageObject {
+	m.Art = &DisplayImageObject{
+		ContentDescription: contentDescription,
+	}
+	return m.Art
+}
+
+// SetBackgroundImage sets the content description for the background image for the audio item metadata.
+func (m *AudioItemMetadata) SetBackgroundImage(contentDescription string) *DisplayImageObject {
+	m.BackgroundImage = &DisplayImageObject{
+		ContentDescription: contentDescription,
+	}
+	return m.BackgroundImage
 }
 
 // AddAudioPlayerStopDirective creates a new stop directive for AudioPlayer interface.
