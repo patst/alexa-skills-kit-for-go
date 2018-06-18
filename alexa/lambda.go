@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
-	"errors"
 	"log"
 )
 
@@ -28,7 +27,7 @@ func (skill *Skill) GetLambdaSkillHandler() LambdaHandler {
 		}
 		if !skill.SkipValidation {
 			if err = requestEnvelope.isRequestValid(skill.ApplicationID); err != nil {
-				return nil, errors.New("Request is invalid")
+				return nil, err
 			}
 		}
 

@@ -58,7 +58,7 @@ func TestLambdaWrongApplicationId(t *testing.T) {
 	_, err = skillHandler(context.TODO(), event)
 
 	assert.Error(t, err)
-	assert.Equal(t, "Request is invalid", err.Error())
+	assert.Equal(t, "Request too old to continue (>150s)", err.Error())
 }
 
 func TestLambdaWrongRequestType(t *testing.T) {

@@ -37,7 +37,7 @@ type User struct {
 
 // Context object provides your skill with information about the current state of the Alexa service and device at the time the request is sent to your service.
 type Context struct {
-	System      System      `json:"system"`
+	System      System      `json:"System"`
 	AudioPlayer AudioPlayer `json:"audioPlayer"`
 }
 

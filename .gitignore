@@ -16,3 +16,6 @@
 # eclipse files
 .project
 .settings/
+
+# IntelliJ files
+.idea/
